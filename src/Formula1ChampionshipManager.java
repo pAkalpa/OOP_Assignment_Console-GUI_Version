@@ -1,2 +1,3 @@
-public class Formula1ChampionshipManager {
+public class Formula1ChampionshipManager implements ChampionshipManager{
+
 }
