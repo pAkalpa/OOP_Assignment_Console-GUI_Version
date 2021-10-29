@@ -1,19 +1,62 @@
-import java.util.ArrayList;
-
 public class Formula1Driver extends Driver{
     private static Formula1Driver f1D;
     //    firstPositionCount, secondPositionCount, thirdPositionCount, raceCountPerSeason, seasonYear
     private int firstPositionCount;
     private int secondPositionCount;
     private int thirdPositionCount;
-    private int seasonYear;
     private int raceCount;
     private int currentPoints;
     private int seasonCount;
 
     private static void SaveArray() {
-        ArrayList <int[]> f1 = new ArrayList<>();
-        int[] personalStatArray = {f1D.seasonYear,f1D.firstPositionCount, f1D.secondPositionCount, f1D.thirdPositionCount,f1D.raceCount};
-        f1.add(personalStatArray);
+        int[] personalStatArray = {f1D.firstPositionCount, f1D.secondPositionCount, f1D.thirdPositionCount,f1D.raceCount};
+    }
+
+    public int getFirstPositionCount() {
+        return firstPositionCount;
+    }
+
+    public void setFirstPositionCount(int firstPositionCount) {
+        this.firstPositionCount = firstPositionCount;
+    }
+
+    public int getSecondPositionCount() {
+        return secondPositionCount;
+    }
+
+    public void setSecondPositionCount(int secondPositionCount) {
+        this.secondPositionCount = secondPositionCount;
+    }
+
+    public int getThirdPositionCount() {
+        return thirdPositionCount;
+    }
+
+    public void setThirdPositionCount(int thirdPositionCount) {
+        this.thirdPositionCount = thirdPositionCount;
+    }
+
+    public int getRaceCount() {
+        return raceCount;
+    }
+
+    public void setRaceCount(int raceCount) {
+        this.raceCount = raceCount;
+    }
+
+    public int getCurrentPoints() {
+        return currentPoints;
+    }
+
+    public void setCurrentPoints(int currentPoints) {
+        this.currentPoints = currentPoints;
+    }
+
+    public int getSeasonCount() {
+        return seasonCount;
+    }
+
+    public void setSeasonCount(int seasonCount) {
+        this.seasonCount = seasonCount;
     }
 }
