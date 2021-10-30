@@ -8,6 +8,10 @@ public class Formula1Driver extends Driver{
     private int currentPoints;
     private int seasonCount;
 
+    public Formula1Driver(String driverName, String driverLocation, int driverAge, String teamName) {
+        super(driverName, driverLocation, driverAge, teamName);
+    }
+
     private static void SaveArray() {
         int[] personalStatArray = {f1D.firstPositionCount, f1D.secondPositionCount, f1D.thirdPositionCount,f1D.raceCount};
     }

@@ -1,8 +1,15 @@
 public abstract class Driver {
     private String driverName;
-    private int driverLocation;
-    private int driverAge;
+    private String driverLocation;
+    private int podiumCount;
     private String teamName;
+
+    public Driver(String driverName, String driverLocation, int podiumCount, String teamName) {
+        this.driverName = driverName;
+        this.driverLocation = driverLocation;
+        this.podiumCount = podiumCount;
+        this.teamName = teamName;
+    }
 
     public String getDriverName() {
         return driverName;
@@ -12,20 +19,20 @@ public abstract class Driver {
         this.driverName = driverName;
     }
 
-    public int getDriverLocation() {
+    public String getDriverLocation() {
         return driverLocation;
     }
 
-    public void setDriverLocation(int driverLocation) {
+    public void setDriverLocation(String driverLocation) {
         this.driverLocation = driverLocation;
     }
 
-    public int getDriverAge() {
-        return driverAge;
+    public int getPodiumCount() {
+        return podiumCount;
     }
 
-    public void setDriverAge(int driverAge) {
-        this.driverAge = driverAge;
+    public void setPodiumCount(int podiumCount) {
+        this.podiumCount = podiumCount;
     }
 
     public String getTeamName() {
