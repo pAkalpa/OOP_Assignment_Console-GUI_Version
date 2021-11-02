@@ -8,7 +8,8 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
     private static final Scanner scanner = new Scanner(System.in);
     private static ArrayList<Formula1Driver> driver = new ArrayList<>();
     private static final String[] teamNameStringArray = {"Mercedes", "Red Bull Racing", "McLaren", "Ferrari", "AlphaTauri", "Aston Martin", "Williams", "Alfa Romeo Racing", "Haas F1 Team"};
-    private static final List<String> teamNameList = new ArrayList<>();
+    private static List<String> teamNameList = new ArrayList<>();
+    private static List<String> occupiedTeamNameList = new ArrayList<>();
 
     public static void main(String[] args) {
         Formula1ChampionshipManager F1CM = new Formula1ChampionshipManager();
@@ -28,11 +29,10 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                     .concat("\n|----------------------------------------------------------|")
                     .concat("\n| 100 or CND |\tCreate a New Driver                        |")
                     .concat("\n| 101 or DAD |\tDelete a Driver                            |")
-                    .concat("\n| 102 or DAT |\tDelete a Team(Manufacturer)                |")
-                    .concat("\n| 103 or CTT |\tChange the Team(Manufacturer)              |")
-                    .concat("\n| 104 or DAS |\tDisplay Statistics                         |")
-                    .concat("\n| 105 or DDT |\tDisplay F1 Driver Table                    |")
-                    .concat("\n| 106 or ANR |\tAdd Race                                   |")
+                    .concat("\n| 102 or CTT |\tChange the Team(Manufacturer)              |")
+                    .concat("\n| 103 or DAS |\tDisplay Statistics                         |")
+                    .concat("\n| 104 or DDT |\tDisplay F1 Driver Table                    |")
+                    .concat("\n| 105 or ANR |\tAdd Race                                   |")
                     .concat("\n| 999 or EXT |\tExit the Program                           |")
                     .concat("\n------------------------------------------------------------")
                     .concat("\nChoose Option: "); // Console Main Menu String
@@ -47,7 +47,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
     }
 
     private void mainMenuInputValidation(String code) {
-        String[] validInputArray = {"100", "CND", "101", "DAD", "102", "DAT", "103", "CTT", "104", "DAS", "105", "DDT", "106", "ANR", "999", "EXT"};
+        String[] validInputArray = {"100", "CND", "101", "DAD", "102", "CTT", "103", "DAS", "104", "DDT", "105", "ANR", "999", "EXT"};
         int index;
         List<String> validInputList = Arrays.asList(validInputArray);
 
@@ -57,19 +57,17 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                 // 100 or VVB
                 case 0, 1 -> CreateNewDriver();
                 //101 or VEB
-//                case 2, 3 -> viewAllEmptyBooths();
+                case 2, 3 -> DisplayDriverNames();
                 //102 or APB
 //                case 4, 5 -> addPatient();
                 //103 or RPB
-//                case 6, 7 -> removePatient();
+                case 6, 7 -> DisplayStatistics();
                 //104 or VPS
-                case 8, 9 -> displayStatistics();
+//                case 8, 9 -> DisplayStatistics();
                 //105 or SPD
 //                case 10, 11 -> saveProgramData();
                 //106 or LPD
-//                case 12, 13 -> loadProgramData();
-                //107 or VRV
-                case 14, 15 -> isValid = false;
+                case 12, 13 -> isValid = false;
             }
         } else {
             isValid = true;
@@ -79,17 +77,20 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 
     @Override
     public void CreateNewDriver() {
-        String driverName , teamName, driverLocation, option;
-        int podiumCount, firstPositionCount, secondPositionCount, thirdPositionCount, raceCount;
+        String driverName, teamName, driverLocation, option;
+        int firstPositionCount, secondPositionCount, thirdPositionCount, raceCount;
         float currentPoints;
         boolean flag;
 
         System.out.println("\nCreate New Driver");
 
+        if (driver.size() != 0) {
+            DisplayDriverNames();
+        }
+
         do {
             driverName = DriverNameValidator();
             driverLocation = DriverLocationValidator();
-            podiumCount = PodiumCountValidator();
             teamName = CarConstructorValidator();
             firstPositionCount = PositionCountValidator(1);
             secondPositionCount = PositionCountValidator(2);
@@ -97,7 +98,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
             raceCount = DriverRaceCountValidator();
             currentPoints = DriverPointsValidator();
 
-            driver.add(new Formula1Driver(driverName, driverLocation, podiumCount, teamName, firstPositionCount, secondPositionCount, thirdPositionCount, raceCount, currentPoints));
+            driver.add(new Formula1Driver(driverName, driverLocation, teamName, firstPositionCount, secondPositionCount, thirdPositionCount, raceCount, currentPoints));
 
             do {
                 String inputRegexPattern = "[YN]+";
@@ -108,13 +109,13 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
             } while (!flag);
         } while (!option.equals("N"));
 
-        System.out.println("Back to Main Menu....");
+        BackToMainMenu();
     }
 
     @Override
     public void SaveFileOnExit() {
         try {
-            System.out.println("File Saving....");
+//            System.out.println("File Saving....");
             File file = new File("./saveData/"); // create new File object
 
             if (!file.exists()) {
@@ -127,13 +128,13 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
             FileOutputStream saveDataFile = new FileOutputStream(saveFilePath);
             ObjectOutputStream saveFile = new ObjectOutputStream(saveDataFile);
 
+            saveFile.writeObject(teamNameList);
             saveFile.writeObject(driver);
 
-            System.out.println("File Saved Successfully!");
+//            System.out.println("File Saved Successfully!");
 
         } catch (IOException e) {
-//            System.out.println("Oops! Something went Wrong.");
-            System.out.println(e);
+            System.out.println("Oops! Something went Wrong.");
         }
     }
 
@@ -145,21 +146,82 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
             if (!file.exists()) {
                 System.out.println("No Save Data Found!\n\t¯\\_(ツ)_/¯");
             } else {
-                System.out.println("File Loading....");
+//                System.out.println("File Loading....");
                 String savedFileName = "./saveData/saveData.dat";
 
                 FileInputStream savedDataFile = new FileInputStream(savedFileName);
                 ObjectInputStream savedFile = new ObjectInputStream(savedDataFile);
 
                 driver.clear();
-                driver = (ArrayList<Formula1Driver>) savedFile.readObject();
+                teamNameList.clear();
+
+                Object list1 = savedFile.readObject();
+                teamNameList = cast1(list1);
+                Collections.sort(teamNameList);
+                Object list2 = savedFile.readObject();
+                driver = cast2(list2);
             }
         } catch (Exception e) {
             System.out.println("Oops! Something went Wrong.");
         }
     }
 
-    private void displayStatistics() {
+    @SuppressWarnings("unchecked")
+    private List<String> cast1(Object obj) {
+        return (List<String>) obj;
+    }
+
+    @SuppressWarnings("unchecked")
+    private ArrayList<Formula1Driver> cast2(Object obj) {
+        return (ArrayList<Formula1Driver>) obj;
+    }
+
+    @Override
+    public void DisplayDriverTable() {
+
+    }
+
+    @Override
+    public void AddRace() {
+
+    }
+
+    @Override
+    public void DisplayDriverNames() {
+        System.out.println("List of Driver's\nIndex | Driver Name | Team/Car Constructor");
+        if (driver.size() == 0) {
+            System.out.println("No Driver's Found!\n\t¯\\_(ツ)_/¯");
+        } else {
+            for (Formula1Driver formula1Driver : driver) {
+                System.out.println("[" + driver.indexOf(formula1Driver) + "] : " + formula1Driver.getDriverName() + "\t" + formula1Driver.getTeamName());
+            }
+        }
+    }
+
+    @Override
+    public void DeleteDriver() {
+        DisplayDriverNames();
+        if (driver.size() != 0) {
+
+        } else {
+            System.out.println("Try Adding Driver using Option in Main Menu -> Create A New Driver");
+        }
+        BackToMainMenu();
+    }
+
+    @Override
+    public void DisplayCarConstructorNames() {
+        Collections.sort(teamNameList);
+        for (String teamNameElement : teamNameList) {
+            System.out.println("[" + teamNameList.indexOf(teamNameElement) + "] : " + teamNameElement);
+        }
+    }
+
+    private void BackToMainMenu() {
+        System.out.println("Back to Main Menu....");
+    }
+
+    private void DisplayStatistics() {
         System.out.println("Driver Statistics");
         if (driver.size() == 0) {
             System.out.println("No Driver Details Found!. Enter Driver Details from Menu \n\t\t\t¯\\_(ツ)_/¯");
@@ -167,7 +229,6 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
             for (Formula1Driver formula1Driver : driver) {
                 String statistics = "________________________________________________________"
                         .concat("\nDriver's Name: " + formula1Driver.getDriverName())
-                        .concat("\nDriver's No of Podiums: " + formula1Driver.getPodiumCount())
                         .concat("\nDriver's Nationality: " + formula1Driver.getDriverLocation())
                         .concat("\nDriver's Team Name: " + formula1Driver.getTeamName())
                         .concat("\nDriver's First Position Count: " + formula1Driver.getFirstPositionCount())
@@ -179,16 +240,16 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                 System.out.println(statistics);
             }
         }
+        BackToMainMenu();
 //        ArrayList<Formula1Driver> f1d = driver.sort(Comparator.comparing(Driver::getPodiumCount));
     }
+
 
     private String CarConstructorValidator() {
         String teamName = "";
         boolean isValidOption;
         System.out.println("Please Select Car Constructor/Team from the List or Add Custom Team: ");
-        for (String teamNameElement : teamNameList) {
-            System.out.println("[" + teamNameList.indexOf(teamNameElement) + "] : " + teamNameElement);
-        }
+        DisplayCarConstructorNames();
         System.out.println("[A] : Add a Custom Team");
 
         String[] nameListIndex = new String[teamNameList.size() + 1];
@@ -208,10 +269,11 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
             if (isValidOption) {
                 if (option.equals("A")) {
                     teamName = addNewTeam();
-                    teamNameList.add(teamName);
                 } else {
                     teamName = teamNameList.get(Integer.parseInt(option));
+                    teamNameList.remove(teamName);
                 }
+                occupiedTeamNameList.add(teamName);
             } else {
                 System.out.println("Invalid Input! Try Again.");
             }
@@ -220,35 +282,20 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
     }
 
     private String addNewTeam() {
+        Scanner sScan = new Scanner(System.in).useDelimiter("\n");
         System.out.print("Enter Custom Team Name: ");
-        return scanner.next();
-    }
-
-    private int PodiumCountValidator() {
-        int podiumCount;
-        do { // validates Driver Podium Count is valid
-            System.out.print("Enter Driver's Podium Count: ");
-            while (!scanner.hasNextInt()) {
-                System.out.print("Invalid Input! Try Again.\nEnter Driver's Podium Count: ");
-                scanner.next();
-            }
-            podiumCount = scanner.nextInt();
-            if (podiumCount < 0) {
-                System.out.println("Invalid Input! Try Again.");
-            }
-        } while (podiumCount < 0);
-        return podiumCount;
+        return sScan.next();
     }
 
     private int PositionCountValidator(int position) {
         int positionCount;
         String[] positionArray = {"First", "Second", "Third"};
-        String promptMessage = "Enter Driver's no of " + positionArray[position-1] + " Positions: ";
+        String promptMessage = "Enter Driver's no of " + positionArray[position - 1] + " Positions: ";
         String errorMessage = "Invalid Input! Try Again.";
         do {
             System.out.print(promptMessage);
             while (!scanner.hasNextInt()) {
-                System.out.print(errorMessage + "\n" +promptMessage);
+                System.out.print(errorMessage + "\n" + promptMessage);
                 scanner.next();
             }
             positionCount = scanner.nextInt();

@@ -1,15 +1,13 @@
 import java.io.Serializable;
 
 public abstract class Driver implements Serializable {
-    private String driverName;
-    private String driverLocation;
-    private int podiumCount;
+    private final String driverName;
+    private final String driverLocation;
     private String teamName;
 
-    public Driver(String driverName, String driverLocation, int podiumCount, String teamName) {
+    public Driver(String driverName, String driverLocation, String teamName) {
         this.driverName = driverName;
         this.driverLocation = driverLocation;
-        this.podiumCount = podiumCount;
         this.teamName = teamName;
     }
 
@@ -19,10 +17,6 @@ public abstract class Driver implements Serializable {
 
     public String getDriverLocation() {
         return driverLocation;
-    }
-
-    public int getPodiumCount() {
-        return podiumCount;
     }
 
     public String getTeamName() {
