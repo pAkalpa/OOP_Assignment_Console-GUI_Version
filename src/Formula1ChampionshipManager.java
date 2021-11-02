@@ -57,7 +57,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                 // 100 or VVB
                 case 0, 1 -> CreateNewDriver();
                 //101 or VEB
-                case 2, 3 -> DisplayDriverNames();
+                case 2, 3 -> DeleteDriver();
                 //102 or APB
 //                case 4, 5 -> addPatient();
                 //103 or RPB
@@ -188,10 +188,10 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 
     @Override
     public void DisplayDriverNames() {
-        System.out.println("List of Driver's\nIndex | Driver Name | Team/Car Constructor");
         if (driver.size() == 0) {
             System.out.println("No Driver's Found!\n\t¯\\_(ツ)_/¯");
         } else {
+            System.out.println("List of Driver's\nIndex | Driver Name | Team/Car Constructor");
             for (Formula1Driver formula1Driver : driver) {
                 System.out.println("[" + driver.indexOf(formula1Driver) + "] : " + formula1Driver.getDriverName() + "\t" + formula1Driver.getTeamName());
             }
@@ -200,13 +200,45 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 
     @Override
     public void DeleteDriver() {
+        int index;
+        String option;
+        boolean flag;
         DisplayDriverNames();
         if (driver.size() != 0) {
-
+            do {
+                do {
+                    System.out.print("Enter Driver Index to Delete Driver(Also Deletes Driver Team) or " + driver.size() + " to Go Back to Menu : ");
+                    while (!scanner.hasNextInt()) {
+                        System.out.print("Invalid Input! Try Again.\nEnter Driver Index to Delete Driver(Also Deletes Driver Team) or " + driver.size() + " to Go Back to Menu : ");
+                        scanner.next();
+                    }
+                    index = scanner.nextInt();
+                    if ((index > driver.size()) || (index < 0)) {
+                        System.out.println("Invalid Input! Try Again.");
+                    }
+                } while ((index > driver.size()) || (index < 0));
+                if (index == driver.size()) {
+                    break;
+                }
+                teamNameList.add(driver.get(index).getTeamName());
+                driver.remove(index);
+                do {
+                    String inputRegexPattern = "[YN]+";
+                    System.out.print("Do You Want to Delete Another Driver?(Y/n) ");
+                    option = scanner.next().toUpperCase();
+                    flag = option.matches(inputRegexPattern);
+                    if (!flag) System.out.println("Invalid Input! Try Again.");
+                } while (!flag);
+            } while (!option.equals("N"));
         } else {
             System.out.println("Try Adding Driver using Option in Main Menu -> Create A New Driver");
         }
         BackToMainMenu();
+    }
+
+    @Override
+    public void ChangeTeam() {
+
     }
 
     @Override

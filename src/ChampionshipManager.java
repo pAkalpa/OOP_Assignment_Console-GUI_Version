@@ -7,5 +7,6 @@ public interface ChampionshipManager {
     public void AddRace();
     public void DisplayDriverNames();
     public void DeleteDriver();
+    public void ChangeTeam();
     public void DisplayCarConstructorNames();
 }
