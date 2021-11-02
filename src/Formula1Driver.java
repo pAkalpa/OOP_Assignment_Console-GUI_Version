@@ -1,6 +1,6 @@
 import java.io.Serializable;
 
-public class Formula1Driver extends Driver implements Serializable {
+public class Formula1Driver extends Driver implements Serializable, Comparable<Formula1Driver> {
     private static Formula1Driver f1D;
     //    firstPositionCount, secondPositionCount, thirdPositionCount, raceCountPerSeason
     private final int firstPositionCount;
@@ -36,5 +36,20 @@ public class Formula1Driver extends Driver implements Serializable {
 
     public float getCurrentPoints() {
         return currentPoints;
+    }
+
+    @Override
+    public int compareTo(Formula1Driver o) {
+        if (this.currentPoints == o.getCurrentPoints()) {
+            if (this.firstPositionCount > o.getFirstPositionCount()) {
+                return 1;
+            } else {
+                return 0;
+            }
+        } else if (this.currentPoints > o.getCurrentPoints()) {
+            return 1;
+        } else {
+            return -1;
+        }
     }
 }

@@ -10,7 +10,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
     private static final String[] teamNameStringArray = {"Mercedes", "Red Bull Racing", "McLaren", "Ferrari", "AlphaTauri", "Aston Martin", "Williams", "Alfa Romeo Racing", "Haas F1 Team"};
     private static List<String> teamNameList = new ArrayList<>();
     private static List<String> occupiedTeamNameList = new ArrayList<>();
-    private static List<String> fullTeamList = new ArrayList<>();
+    private static final List<String> fullTeamList = new ArrayList<>();
 
     /**
      * Main Method Invoke four methods and Create Object
@@ -79,9 +79,9 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                 //103 or DAS
                 case 6, 7 -> DisplayStatistics();
                 //104 or DDT
-//                case 8, 9 -> DisplayStatistics();
+                case 8, 9 -> DisplayDriverTable();
                 //105 or ANR
-//                case 10, 11 -> saveProgramData();
+                case 10, 11 -> AddRace();
                 //999 or EXT
                 case 12, 13 -> isValid = false;
             }
@@ -131,6 +131,9 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         BackToMainMenu();
     }
 
+    /**
+     * This Method Deletes Driver and Team
+     */
     @Override
     public void DeleteDriver() {
         int index;
@@ -173,6 +176,9 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         BackToMainMenu();
     }
 
+    /**
+     * This Method Changes Team
+     */
     @Override
     public void ChangeTeam() {
         int index;
@@ -246,6 +252,9 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         BackToMainMenu();
     }
 
+    /**
+     * This Method Display Driver's Statistics
+     */
     public void DisplayStatistics() {
         System.out.println("Driver Statistics");
         if (driver.size() == 0) {
@@ -269,16 +278,30 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 //        ArrayList<Formula1Driver> f1d = driver.sort(Comparator.comparing(Driver::getPodiumCount));
     }
 
+    /**
+     * This Method Display Driver Table
+     */
     @Override
     public void DisplayDriverTable() {
-
+        System.out.println("\n\n\t\tFormula 1 Driver Table\nPOS - DRIVER NAME - NATIONALITY - CAR CONSTRUCTOR/TEAM NAME - PTS");
+        Collections.sort(driver);
+        for (Formula1Driver fDriver: driver) {
+            System.out.println((driver.indexOf(fDriver)+1) + fDriver.getDriverName() + fDriver.getDriverLocation() + fDriver.getTeamName() + fDriver.getCurrentPoints());
+        }
+        BackToMainMenu();
     }
 
+    /**
+     * This Method Adds Race to Program
+     */
     @Override
     public void AddRace() {
 
     }
 
+    /**
+     * This Method save ArrayLists, Lists to file
+     */
     @Override
     public void SaveFileOnExit() {
         try {
@@ -306,6 +329,9 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         }
     }
 
+    /**
+     * This Method Load Saved Data to Program
+     */
     @Override
     public void LoadFileOnStart() {
         try {
@@ -325,33 +351,41 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                 occupiedTeamNameList.clear();
 
                 Object list1 = savedFile.readObject();
-                teamNameList = cast1(list1);
+                teamNameList = CastList(list1);
                 Collections.sort(teamNameList);
                 Object list2 = savedFile.readObject();
-                driver = cast2(list2);
+                driver = CastArrayList(list2);
                 Object list3 = savedFile.readObject();
-                occupiedTeamNameList = cast3(list3);
+                occupiedTeamNameList = CastList(list3);
             }
         } catch (Exception e) {
             System.out.println("Oops! Something went Wrong.");
         }
     }
 
+    /**
+     * This Method Cast Lists
+     * @param obj - List
+     * @return - Object cast into List
+     */
     @SuppressWarnings("unchecked")
-    private List<String> cast1(Object obj) {
+    private List<String> CastList(Object obj) {
         return (List<String>) obj;
     }
 
+    /**
+     * This Method Cast ArrayLists
+     * @param obj - ArrayList
+     * @return - Object cast into ArrayList
+     */
     @SuppressWarnings("unchecked")
-    private ArrayList<Formula1Driver> cast2(Object obj) {
+    private ArrayList<Formula1Driver> CastArrayList(Object obj) {
         return (ArrayList<Formula1Driver>) obj;
     }
 
-    @SuppressWarnings("unchecked")
-    private List<String> cast3(Object obj) {
-        return (List<String>) obj;
-    }
-
+    /**
+     * This Method Display Names of the Driver
+     */
     private void DisplayDriverNames() {
         if (driver.size() == 0) {
             System.out.println("No Driver's Found!\n\t¯\\_(ツ)_/¯");
@@ -363,6 +397,10 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         }
     }
 
+    /**
+     * This Method Display Car Constructor/Team Name according to parsed parameter
+     * @param i - 1 : Team Deleted List ; 2 : All Team List
+     */
     private void DisplayCarConstructorNames(int i) {
         if (i == 1) {
             Collections.sort(teamNameList);
@@ -377,10 +415,17 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         }
     }
 
+    /**
+     * This Method Prints Back to Main Menu Text
+     */
     private void BackToMainMenu() {
         System.out.println("Back to Main Menu....");
     }
 
+    /**
+     * This Method takes Car Name user Input and Validate
+     * @return - Validated Car Constructor/Team Name
+     */
     private String CarConstructorValidator() {
         String teamName = "";
         boolean isValidOption;
@@ -404,7 +449,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
             isValidOption = validInputs.contains(option);
             if (isValidOption) {
                 if (option.equals("A")) {
-                    teamName = addNewTeam();
+                    teamName = AddNewTeam();
                 } else {
                     teamName = teamNameList.get(Integer.parseInt(option));
                     teamNameList.remove(teamName);
@@ -417,12 +462,19 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         return teamName;
     }
 
-    private String addNewTeam() {
+    /**
+     * @return
+     */
+    private String AddNewTeam() {
         Scanner sScan = new Scanner(System.in).useDelimiter("\n");
         System.out.print("Enter Custom Team Name: ");
         return sScan.next();
     }
 
+    /**
+     * @param position
+     * @return
+     */
     private int PositionCountValidator(int position) {
         int positionCount;
         String[] positionArray = {"First", "Second", "Third"};
@@ -442,6 +494,9 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         return positionCount;
     }
 
+    /**
+     * @return
+     */
     private String DriverNameValidator() {
         String driverName;
         do {
@@ -455,6 +510,9 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         return driverName;
     }
 
+    /**
+     * @return
+     */
     private String DriverLocationValidator() {
         String driverLocation;
         boolean isValidCountryCodeLength;
@@ -468,6 +526,9 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         return driverLocation;
     }
 
+    /**
+     * @return
+     */
     private int DriverRaceCountValidator() {
         int raceCount;
         do { // validates Driver Race Count is valid
@@ -484,6 +545,9 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         return raceCount;
     }
 
+    /**
+     * @return
+     */
     private float DriverPointsValidator() {
         float currentPoints;
         do { // validates Driver current Points is valid
@@ -500,6 +564,9 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         return currentPoints;
     }
 
+    /**
+     * @param val
+     */
     private static void printAsciiArt(boolean val) {
         String art1 = "\t\t\t█───█─▄▀▀─█───▄▀▀─▄▀▀▄─█▄─▄█─▄▀▀"
                 .concat("\n\t\t\t█───█─█───█───█───█──█─█▀▄▀█─█──")
