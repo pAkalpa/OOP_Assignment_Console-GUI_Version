@@ -10,10 +10,17 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
     private static final String[] teamNameStringArray = {"Mercedes", "Red Bull Racing", "McLaren", "Ferrari", "AlphaTauri", "Aston Martin", "Williams", "Alfa Romeo Racing", "Haas F1 Team"};
     private static List<String> teamNameList = new ArrayList<>();
     private static List<String> occupiedTeamNameList = new ArrayList<>();
+    private static List<String> fullTeamList = new ArrayList<>();
 
+    /**
+     * Main Method Invoke four methods and Create Object
+     * @param args - None
+     */
     public static void main(String[] args) {
         Formula1ChampionshipManager F1CM = new Formula1ChampionshipManager();
         Collections.addAll(teamNameList, teamNameStringArray);
+        fullTeamList.addAll(teamNameList);
+        fullTeamList.addAll(occupiedTeamNameList);
         printAsciiArt(true);
         F1CM.LoadFileOnStart();
         F1CM.mainMenu();
@@ -21,11 +28,16 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         printAsciiArt(false);
     }
 
+    /**
+     * This Method Display Formula 1 Championship Manager Program Console Main Menu
+     */
     @Override
     public void mainMenu() {
         while (isValid) {
             String menuItems = "\n------------------------------------------------------------"
-                    .concat("\n|          Formula1 Championship Manager Program           |")
+                    .concat("\n|  _    _                                                  |")
+                    .concat("\n|  \\`../ |o_..__   Formula1 Championship Manager Program   |")
+                    .concat("\n|`.,(_)______(_).>                                         |")
                     .concat("\n|----------------------------------------------------------|")
                     .concat("\n| 100 or CND |\tCreate a New Driver                        |")
                     .concat("\n| 101 or DAD |\tDelete a Driver                            |")
@@ -46,6 +58,10 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         System.out.println("Exiting Program...");
     }
 
+    /**
+     * This Method Validates and Invoke methods according to Main Menu input
+     * @param code - user input taking from the main menu
+     */
     private void mainMenuInputValidation(String code) {
         String[] validInputArray = {"100", "CND", "101", "DAD", "102", "CTT", "103", "DAS", "104", "DDT", "105", "ANR", "999", "EXT"};
         int index;
@@ -54,19 +70,19 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         if (validInputList.contains(code)) {
             index = validInputList.indexOf(code);
             switch (index) { // switch case of valid input index
-                // 100 or VVB
+                // 100 or CND
                 case 0, 1 -> CreateNewDriver();
-                //101 or VEB
+                //101 or DAD
                 case 2, 3 -> DeleteDriver();
-                //102 or APB
-//                case 4, 5 -> addPatient();
-                //103 or RPB
+                //102 or CTT
+                case 4, 5 -> ChangeTeam();
+                //103 or DAS
                 case 6, 7 -> DisplayStatistics();
-                //104 or VPS
+                //104 or DDT
 //                case 8, 9 -> DisplayStatistics();
-                //105 or SPD
+                //105 or ANR
 //                case 10, 11 -> saveProgramData();
-                //106 or LPD
+                //999 or EXT
                 case 12, 13 -> isValid = false;
             }
         } else {
@@ -75,6 +91,9 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         }
     }
 
+    /**
+     * This Method Creates a new Driver and save it in driver arraylist
+     */
     @Override
     public void CreateNewDriver() {
         String driverName, teamName, driverLocation, option;
@@ -102,7 +121,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 
             do {
                 String inputRegexPattern = "[YN]+";
-                System.out.print("Do You Want to create Another Driver?(Y/n) ");
+                System.out.print("\nDo You Want to create Another Driver?(Y/n) ");
                 option = scanner.next().toUpperCase();
                 flag = option.matches(inputRegexPattern);
                 if (!flag) System.out.println("Invalid Input! Try Again.");
@@ -110,6 +129,154 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         } while (!option.equals("N"));
 
         BackToMainMenu();
+    }
+
+    @Override
+    public void DeleteDriver() {
+        int index;
+        String option;
+        boolean flag;
+        DisplayDriverNames();
+        if (driver.size() != 0) {
+            do {
+                do {
+                    System.out.print("\nEnter Driver Index to Delete Driver(Also Deletes Driver Team) or " + driver.size() + " to Go Back to Menu : ");
+                    while (!scanner.hasNextInt()) {
+                        System.out.print("Invalid Input! Try Again.\nEnter Driver Index to Delete Driver(Also Deletes Driver Team) or " + driver.size() + " to Go Back to Menu : ");
+                        scanner.next();
+                    }
+                    index = scanner.nextInt();
+                    if ((index > driver.size()) || (index < 0)) {
+                        System.out.println("Invalid Input! Try Again.");
+                    }
+                } while ((index > driver.size()) || (index < 0));
+                if (index == driver.size()) {
+                    break;
+                }
+                teamNameList.add(driver.get(index).getTeamName());
+                driver.remove(index);
+                System.out.println("Driver and Team Successfully Deleted.");
+                do {
+                    String inputRegexPattern = "[YN]+";
+                    System.out.print("Do You Want to Delete Another Driver?(Y/n) ");
+                    option = scanner.next().toUpperCase();
+                    flag = option.matches(inputRegexPattern);
+                    if (!flag) System.out.println("Invalid Input! Try Again.");
+                    if (flag) {
+                        DisplayDriverNames();
+                    }
+                } while (!flag);
+            } while (!option.equals("N"));
+        } else {
+            System.out.println("Try Adding Driver using Option in Main Menu -> Create A New Driver");
+        }
+        BackToMainMenu();
+    }
+
+    @Override
+    public void ChangeTeam() {
+        int index;
+        int teamIndex;
+        String option;
+        boolean flag;
+        DisplayDriverNames();
+        if (driver.size() != 0) {
+            do {
+                do {
+                    System.out.print("\nEnter Driver Index to Change Team or " + driver.size() + " to Go Back to Menu : ");
+                    while (!scanner.hasNextInt()) {
+                        System.out.print("Invalid Input! Try Again.\nEnter Driver Index to Change Team or " + driver.size() + " to Go Back to Menu : ");
+                        scanner.next();
+                    }
+                    index = scanner.nextInt();
+                    if ((index > driver.size()) || (index < 0)) {
+                        System.out.println("Invalid Input! Try Again.");
+                    }
+                } while ((index > driver.size()) || (index < 0));
+                if (index == driver.size()) {
+                    break;
+                }
+
+                System.out.println("Please Select Car Constructor/Team from the List");
+                DisplayCarConstructorNames(2);
+                do {
+                    System.out.print("Select Preferred Team(index): ");
+                    while (!scanner.hasNextInt()) {
+                        System.out.print("Invalid Input! Try Again.\nSelect Preferred Team(index): ");
+                        scanner.next();
+                    }
+                    teamIndex = scanner.nextInt();
+                    if ((teamIndex < 0) || (teamIndex > fullTeamList.size() - 1)) {
+                        System.out.println("Invalid Input! Try Again.");
+                    }
+                } while ((teamIndex < 0) || (teamIndex > fullTeamList.size() - 1));
+
+                String selectedTeamName = fullTeamList.get(teamIndex);
+                boolean teamFound = false;
+                for (Formula1Driver formula1Driver : driver) {
+                    if (formula1Driver.getTeamName().equals(selectedTeamName)) {
+                        formula1Driver.setTeamName(driver.get(index).getTeamName());
+                        driver.get(index).setTeamName(selectedTeamName);
+                        System.out.println(driver.get(index).getDriverName() + " Set to Team -> " + selectedTeamName + "\n(" + formula1Driver.getDriverName() + " automatically set to Team -> " + formula1Driver.getTeamName() + ")");
+                        teamFound = true;
+                    }
+                }
+                if (!teamFound) {
+                    teamNameList.add(driver.get(index).getTeamName());
+                    driver.get(index).setTeamName(selectedTeamName);
+                    teamNameList.remove(selectedTeamName);
+                    occupiedTeamNameList.add(selectedTeamName);
+                    System.out.println(driver.get(index).getDriverName() + " Set to Team -> " + selectedTeamName);
+                }
+
+                do {
+                    String inputRegexPattern = "[YN]+";
+                    System.out.print("Do You Want to Change Team of Another Driver?(Y/n) ");
+                    option = scanner.next().toUpperCase();
+                    flag = option.matches(inputRegexPattern);
+                    if (!flag) System.out.println("Invalid Input! Try Again.");
+                    if (flag) {
+                        DisplayDriverNames();
+                    }
+                } while (!flag);
+            } while (!option.equals("N"));
+        } else {
+            System.out.println("Try Adding Driver using Option in Main Menu -> Create A New Driver");
+        }
+        BackToMainMenu();
+    }
+
+    public void DisplayStatistics() {
+        System.out.println("Driver Statistics");
+        if (driver.size() == 0) {
+            System.out.println("No Driver Details Found!. Enter Driver Details from Menu \n\t\t\t¯\\_(ツ)_/¯");
+        } else {
+            for (Formula1Driver formula1Driver : driver) {
+                String statistics = "________________________________________________________"
+                        .concat("\nDriver's Name: " + formula1Driver.getDriverName())
+                        .concat("\nDriver's Nationality: " + formula1Driver.getDriverLocation())
+                        .concat("\nDriver's Team Name: " + formula1Driver.getTeamName())
+                        .concat("\nDriver's First Position Count: " + formula1Driver.getFirstPositionCount())
+                        .concat("\nDriver's Second Position Count: " + formula1Driver.getSecondPositionCount())
+                        .concat("\nDriver's Third Position Count: " + formula1Driver.getThirdPositionCount())
+                        .concat("\nDriver Participated Race Count: " + formula1Driver.getRaceCount())
+                        .concat("\nDriver's Current Points: " + formula1Driver.getCurrentPoints())
+                        .concat("\n--------------------------------------------------------");
+                System.out.println(statistics);
+            }
+        }
+        BackToMainMenu();
+//        ArrayList<Formula1Driver> f1d = driver.sort(Comparator.comparing(Driver::getPodiumCount));
+    }
+
+    @Override
+    public void DisplayDriverTable() {
+
+    }
+
+    @Override
+    public void AddRace() {
+
     }
 
     @Override
@@ -130,6 +297,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 
             saveFile.writeObject(teamNameList);
             saveFile.writeObject(driver);
+            saveFile.writeObject(occupiedTeamNameList);
 
 //            System.out.println("File Saved Successfully!");
 
@@ -154,12 +322,15 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 
                 driver.clear();
                 teamNameList.clear();
+                occupiedTeamNameList.clear();
 
                 Object list1 = savedFile.readObject();
                 teamNameList = cast1(list1);
                 Collections.sort(teamNameList);
                 Object list2 = savedFile.readObject();
                 driver = cast2(list2);
+                Object list3 = savedFile.readObject();
+                occupiedTeamNameList = cast3(list3);
             }
         } catch (Exception e) {
             System.out.println("Oops! Something went Wrong.");
@@ -176,18 +347,12 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         return (ArrayList<Formula1Driver>) obj;
     }
 
-    @Override
-    public void DisplayDriverTable() {
-
+    @SuppressWarnings("unchecked")
+    private List<String> cast3(Object obj) {
+        return (List<String>) obj;
     }
 
-    @Override
-    public void AddRace() {
-
-    }
-
-    @Override
-    public void DisplayDriverNames() {
+    private void DisplayDriverNames() {
         if (driver.size() == 0) {
             System.out.println("No Driver's Found!\n\t¯\\_(ツ)_/¯");
         } else {
@@ -198,54 +363,17 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         }
     }
 
-    @Override
-    public void DeleteDriver() {
-        int index;
-        String option;
-        boolean flag;
-        DisplayDriverNames();
-        if (driver.size() != 0) {
-            do {
-                do {
-                    System.out.print("Enter Driver Index to Delete Driver(Also Deletes Driver Team) or " + driver.size() + " to Go Back to Menu : ");
-                    while (!scanner.hasNextInt()) {
-                        System.out.print("Invalid Input! Try Again.\nEnter Driver Index to Delete Driver(Also Deletes Driver Team) or " + driver.size() + " to Go Back to Menu : ");
-                        scanner.next();
-                    }
-                    index = scanner.nextInt();
-                    if ((index > driver.size()) || (index < 0)) {
-                        System.out.println("Invalid Input! Try Again.");
-                    }
-                } while ((index > driver.size()) || (index < 0));
-                if (index == driver.size()) {
-                    break;
-                }
-                teamNameList.add(driver.get(index).getTeamName());
-                driver.remove(index);
-                do {
-                    String inputRegexPattern = "[YN]+";
-                    System.out.print("Do You Want to Delete Another Driver?(Y/n) ");
-                    option = scanner.next().toUpperCase();
-                    flag = option.matches(inputRegexPattern);
-                    if (!flag) System.out.println("Invalid Input! Try Again.");
-                } while (!flag);
-            } while (!option.equals("N"));
-        } else {
-            System.out.println("Try Adding Driver using Option in Main Menu -> Create A New Driver");
-        }
-        BackToMainMenu();
-    }
-
-    @Override
-    public void ChangeTeam() {
-
-    }
-
-    @Override
-    public void DisplayCarConstructorNames() {
-        Collections.sort(teamNameList);
-        for (String teamNameElement : teamNameList) {
-            System.out.println("[" + teamNameList.indexOf(teamNameElement) + "] : " + teamNameElement);
+    private void DisplayCarConstructorNames(int i) {
+        if (i == 1) {
+            Collections.sort(teamNameList);
+            for (String teamNameElement : teamNameList) {
+                System.out.println("[" + teamNameList.indexOf(teamNameElement) + "] : " + teamNameElement);
+            }
+        } else if (i == 2){
+            Collections.sort(fullTeamList);
+            for (String element : fullTeamList) {
+                System.out.println("[" + fullTeamList.indexOf(element) + "] : " + element);
+            }
         }
     }
 
@@ -253,35 +381,11 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         System.out.println("Back to Main Menu....");
     }
 
-    private void DisplayStatistics() {
-        System.out.println("Driver Statistics");
-        if (driver.size() == 0) {
-            System.out.println("No Driver Details Found!. Enter Driver Details from Menu \n\t\t\t¯\\_(ツ)_/¯");
-        } else {
-            for (Formula1Driver formula1Driver : driver) {
-                String statistics = "________________________________________________________"
-                        .concat("\nDriver's Name: " + formula1Driver.getDriverName())
-                        .concat("\nDriver's Nationality: " + formula1Driver.getDriverLocation())
-                        .concat("\nDriver's Team Name: " + formula1Driver.getTeamName())
-                        .concat("\nDriver's First Position Count: " + formula1Driver.getFirstPositionCount())
-                        .concat("\nDriver's Second Position Count: " + formula1Driver.getSecondPositionCount())
-                        .concat("\nDriver's Third Position Count: " + formula1Driver.getThirdPositionCount())
-                        .concat("\nDriver Participated Race Count: " + formula1Driver.getRaceCount())
-                        .concat("\nDriver's Current Points: " + formula1Driver.getCurrentPoints())
-                        .concat("\n--------------------------------------------------------");
-                System.out.println(statistics);
-            }
-        }
-        BackToMainMenu();
-//        ArrayList<Formula1Driver> f1d = driver.sort(Comparator.comparing(Driver::getPodiumCount));
-    }
-
-
     private String CarConstructorValidator() {
         String teamName = "";
         boolean isValidOption;
         System.out.println("Please Select Car Constructor/Team from the List or Add Custom Team: ");
-        DisplayCarConstructorNames();
+        DisplayCarConstructorNames(1);
         System.out.println("[A] : Add a Custom Team");
 
         String[] nameListIndex = new String[teamNameList.size() + 1];
@@ -342,7 +446,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         String driverName;
         do {
             Scanner sScan = new Scanner(System.in).useDelimiter("\n");
-            System.out.print("Enter Driver's Name: ");
+            System.out.print("\nEnter Driver's Name: ");
             driverName = sScan.next();
             if (driverName.length() < 3) {
                 System.out.println("Invalid Input! Try Again.");
@@ -356,7 +460,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         boolean isValidCountryCodeLength;
         boolean isValidCountryCode;
         do {
-            System.out.print("\nEnter Driver's Location(Country Code Ex:Japan as JPN): ");
+            System.out.print("Enter Driver's Location(Country Code Ex:Japan as JPN): ");
             driverLocation = scanner.next().toUpperCase();
             isValidCountryCode = Locale.getISOCountries(Locale.IsoCountryCode.PART1_ALPHA3).contains(driverLocation);
             isValidCountryCodeLength = driverLocation.length() != 3;
