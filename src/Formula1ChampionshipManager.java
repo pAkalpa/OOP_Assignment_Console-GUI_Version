@@ -1,6 +1,9 @@
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Formula1ChampionshipManager implements ChampionshipManager {
@@ -9,23 +12,21 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
     private static ArrayList<Formula1Driver> driver = new ArrayList<>();
     private static final String[] teamNameStringArray = {"Mercedes", "Red Bull Racing", "McLaren", "Ferrari", "AlphaTauri", "Aston Martin", "Williams", "Alfa Romeo Racing", "Haas F1 Team"};
     private static List<String> teamNameList = new ArrayList<>();
-    private static List<String> occupiedTeamNameList = new ArrayList<>();
-    private static final List<String> fullTeamList = new ArrayList<>();
+    private static List<String> raceDates = new ArrayList<>();
 
     /**
      * Main Method Invoke four methods and Create Object
+     *
      * @param args - None
      */
     public static void main(String[] args) {
         Formula1ChampionshipManager F1CM = new Formula1ChampionshipManager();
         Collections.addAll(teamNameList, teamNameStringArray);
-        fullTeamList.addAll(teamNameList);
-        fullTeamList.addAll(occupiedTeamNameList);
-        printAsciiArt(true);
+        PrintAsciiArt(true);
         F1CM.LoadFileOnStart();
         F1CM.mainMenu();
         F1CM.SaveFileOnExit();
-        printAsciiArt(false);
+        PrintAsciiArt(false);
     }
 
     /**
@@ -60,6 +61,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 
     /**
      * This Method Validates and Invoke methods according to Main Menu input
+     *
      * @param code - user input taking from the main menu
      */
     private void mainMenuInputValidation(String code) {
@@ -143,9 +145,9 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         if (driver.size() != 0) {
             do {
                 do {
-                    System.out.print("\nEnter Driver Index to Delete Driver(Also Deletes Driver Team) or " + driver.size() + " to Go Back to Menu : ");
+                    System.out.print("\nEnter Driver Index to Delete Driver(Also Deletes Driver Team) or Enter " + driver.size() + " to Go Back to Menu : ");
                     while (!scanner.hasNextInt()) {
-                        System.out.print("Invalid Input! Try Again.\nEnter Driver Index to Delete Driver(Also Deletes Driver Team) or " + driver.size() + " to Go Back to Menu : ");
+                        System.out.print("Invalid Input! Try Again.\nEnter Driver Index to Delete Driver(Also Deletes Driver Team) or Enter " + driver.size() + " to Go Back to Menu : ");
                         scanner.next();
                     }
                     index = scanner.nextInt();
@@ -165,7 +167,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                     option = scanner.next().toUpperCase();
                     flag = option.matches(inputRegexPattern);
                     if (!flag) System.out.println("Invalid Input! Try Again.");
-                    if (flag) {
+                    if (option.equals("Y")) {
                         DisplayDriverNames();
                     }
                 } while (!flag);
@@ -189,9 +191,9 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         if (driver.size() != 0) {
             do {
                 do {
-                    System.out.print("\nEnter Driver Index to Change Team or " + driver.size() + " to Go Back to Menu : ");
+                    System.out.print("\nEnter Driver Index to Change Team or Enter " + driver.size() + " to Go Back to Menu : ");
                     while (!scanner.hasNextInt()) {
-                        System.out.print("Invalid Input! Try Again.\nEnter Driver Index to Change Team or " + driver.size() + " to Go Back to Menu : ");
+                        System.out.print("Invalid Input! Try Again.\nEnter Driver Index to Change Team or Enter " + driver.size() + " to Go Back to Menu : ");
                         scanner.next();
                     }
                     index = scanner.nextInt();
@@ -204,7 +206,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                 }
 
                 System.out.println("Please Select Car Constructor/Team from the List");
-                DisplayCarConstructorNames(2);
+                DisplayCarConstructorNames();
                 do {
                     System.out.print("Select Preferred Team(index): ");
                     while (!scanner.hasNextInt()) {
@@ -212,28 +214,15 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                         scanner.next();
                     }
                     teamIndex = scanner.nextInt();
-                    if ((teamIndex < 0) || (teamIndex > fullTeamList.size() - 1)) {
+                    if ((teamIndex < 0) || (teamIndex > teamNameList.size() - 1)) {
                         System.out.println("Invalid Input! Try Again.");
                     }
-                } while ((teamIndex < 0) || (teamIndex > fullTeamList.size() - 1));
+                } while ((teamIndex < 0) || (teamIndex > teamNameList.size() - 1));
 
-                String selectedTeamName = fullTeamList.get(teamIndex);
-                boolean teamFound = false;
-                for (Formula1Driver formula1Driver : driver) {
-                    if (formula1Driver.getTeamName().equals(selectedTeamName)) {
-                        formula1Driver.setTeamName(driver.get(index).getTeamName());
-                        driver.get(index).setTeamName(selectedTeamName);
-                        System.out.println(driver.get(index).getDriverName() + " Set to Team -> " + selectedTeamName + "\n(" + formula1Driver.getDriverName() + " automatically set to Team -> " + formula1Driver.getTeamName() + ")");
-                        teamFound = true;
-                    }
-                }
-                if (!teamFound) {
-                    teamNameList.add(driver.get(index).getTeamName());
-                    driver.get(index).setTeamName(selectedTeamName);
-                    teamNameList.remove(selectedTeamName);
-                    occupiedTeamNameList.add(selectedTeamName);
-                    System.out.println(driver.get(index).getDriverName() + " Set to Team -> " + selectedTeamName);
-                }
+                String selectedTeamName = teamNameList.get(teamIndex);
+                teamNameList.remove(selectedTeamName);
+                teamNameList.add(driver.get(index).getTeamName());
+                driver.get(index).setTeamName(selectedTeamName);
 
                 do {
                     String inputRegexPattern = "[YN]+";
@@ -256,13 +245,40 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      * This Method Display Driver's Statistics
      */
     public void DisplayStatistics() {
+        int index;
+        String option;
+        boolean flag;
         System.out.println("Driver Statistics");
         if (driver.size() == 0) {
             System.out.println("No Driver Details Found!. Enter Driver Details from Menu \n\t\t\t¯\\_(ツ)_/¯");
         } else {
-            for (Formula1Driver formula1Driver : driver) {
-                formula1Driver.PrintDriverTable();
-            }
+            do {
+                DisplayDriverNames();
+                do {
+                    System.out.print("\nEnter Driver Index to View Driver Details or Enter " + driver.size() + " to Go Back to Menu : ");
+                    while (!scanner.hasNextInt()) {
+                        System.out.print("Invalid Input! Try Again.\nEnter Driver Index to View Driver Details or Enter " + driver.size() + " to Go Back to Menu : ");
+                        scanner.next();
+                    }
+                    index = scanner.nextInt();
+                    if ((index > driver.size()) || (index < 0)) {
+                        System.out.println("Invalid Input! Try Again.");
+                    }
+                } while ((index > driver.size()) || (index < 0));
+                if (index == driver.size()) {
+                    break;
+                }
+
+                driver.get(index).PrintDriverTable();
+
+                do {
+                    String inputRegexPattern = "[YN]+";
+                    System.out.print("Do You Want to View Details of Another Driver?(Y/n) ");
+                    option = scanner.next().toUpperCase();
+                    flag = option.matches(inputRegexPattern);
+                    if (!flag) System.out.println("Invalid Input! Try Again.");
+                } while (!flag);
+            } while (!option.equals("N"));
         }
         BackToMainMenu();
     }
@@ -272,17 +288,21 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      */
     @Override
     public void DisplayDriverTable() {
-        Collections.sort(driver);
-        String tableData = "| %3d | %-18s |     %-3s     | %-17s | %-4.2f |%n";
-        System.out.format("+---------------------------------------------------------------------+%n")
-                        .format("|                        Formula 1 Driver Table                       |%n")
-                        .format("+-----+--------------------+-------------+-------------------+--------+%n")
-                        .format("| POS |       DRIVER       | NATIONALITY |        CAR        |   PTS  |%n")
-                        .format("+-----+--------------------+-------------+-------------------+--------|%n");
-        for (Formula1Driver fDriver : driver) {
-            System.out.format(tableData, (driver.indexOf(fDriver)+1), fDriver.getDriverName(), fDriver.getDriverLocation(), fDriver.getTeamName(), fDriver.getCurrentPoints());
+        if (driver.size() != 0) {
+            Collections.sort(driver);
+            String tableData = "| %3d | %-18s |     %-3s     | %-17s | %-4.2f |%n";
+            System.out.format("+---------------------------------------------------------------------+%n")
+                    .format("|                        Formula 1 Driver Table                       |%n")
+                    .format("+-----+--------------------+-------------+-------------------+--------+%n")
+                    .format("| POS |       DRIVER       | NATIONALITY |        CAR        |   PTS  |%n")
+                    .format("+-----+--------------------+-------------+-------------------+--------|%n");
+            for (Formula1Driver fDriver : driver) {
+                System.out.format(tableData, (driver.indexOf(fDriver) + 1), fDriver.getDriverName(), fDriver.getDriverLocation(), fDriver.getTeamName(), fDriver.getCurrentPoints());
+            }
+            System.out.format("+---------------------------------------------------------------------+%n");
+        } else {
+            System.out.println("Try Adding Driver using Option in Main Menu -> Create A New Driver");
         }
-        System.out.format("+---------------------------------------------------------------------+%n");
         BackToMainMenu();
     }
 
@@ -291,7 +311,42 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      */
     @Override
     public void AddRace() {
+        if (driver.size() != 0) {
+            String option;
+            String dateString;
+            boolean flag;
+            boolean isValidDate;
+            do {
+                do {
+                    System.out.print("\nEnter Date of the Race yyyy/MM/dd(Ex 2021/02/23): ");
+                    dateString = scanner.next();
+                    isValidDate = DateValidator(dateString);
+                    if (dateString.length() != 10) {
+                        System.out.println("Invalid Input! Try Again.");
+                    }
+                    if (!isValidDate) {
+                        System.out.println("Invalid Date! Try Again.");
+                    }
+                } while (dateString.length() != 10 || !isValidDate);
 
+                raceDates.add(dateString);
+
+                for (Formula1Driver formula1Driver : driver) {
+                    RaceDataUpdater(formula1Driver);
+                }
+
+                do {
+                    String inputRegexPattern = "[YN]+";
+                    System.out.print("Do You Want to Add another Race?(Y/n) ");
+                    option = scanner.next().toUpperCase();
+                    flag = option.matches(inputRegexPattern);
+                    if (!flag) System.out.println("Invalid Input! Try Again.");
+                } while (!flag);
+            } while (!option.equals("N"));
+        } else {
+            System.out.println("Try Adding Driver using Option in Main Menu -> Create A New Driver");
+        }
+        BackToMainMenu();
     }
 
     /**
@@ -315,7 +370,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 
             saveFile.writeObject(teamNameList);
             saveFile.writeObject(driver);
-            saveFile.writeObject(occupiedTeamNameList);
+            saveFile.writeObject(raceDates);
 
 //            System.out.println("File Saved Successfully!");
 
@@ -343,7 +398,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 
                 driver.clear();
                 teamNameList.clear();
-                occupiedTeamNameList.clear();
+                raceDates.clear();
 
                 Object list1 = savedFile.readObject();
                 teamNameList = CastList(list1);
@@ -351,7 +406,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                 Object list2 = savedFile.readObject();
                 driver = CastArrayList(list2);
                 Object list3 = savedFile.readObject();
-                occupiedTeamNameList = CastList(list3);
+                raceDates = CastList(list3);
             }
         } catch (Exception e) {
             System.out.println("Oops! Something went Wrong.");
@@ -360,6 +415,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 
     /**
      * This Method Cast Lists
+     *
      * @param obj - List
      * @return - Object cast into List
      */
@@ -370,6 +426,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 
     /**
      * This Method Cast ArrayLists
+     *
      * @param obj - ArrayList
      * @return - Object cast into ArrayList
      */
@@ -385,28 +442,26 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         if (driver.size() == 0) {
             System.out.println("No Driver's Found!\n\t¯\\_(ツ)_/¯");
         } else {
-            System.out.println("List of Driver's\nIndex | Driver Name | Team/Car Constructor");
-            for (Formula1Driver formula1Driver : driver) {
-                System.out.println("[" + driver.indexOf(formula1Driver) + "] : " + formula1Driver.getDriverName() + "\t" + formula1Driver.getTeamName());
+            String tableData = "|  %2d   | %-18s | %-18s|%n";
+            System.out.format("+------------------------------------------------+%n")
+                    .format("|                List of Driver's                |%n")
+                    .format("+------------------------------------------------+%n")
+                    .format("| Index |     DRIVER NAME    |       TEAM        |%n")
+                    .format("+------------------------------------------------+%n");
+            for (Formula1Driver fDriver : driver) {
+                System.out.format(tableData, driver.indexOf(fDriver), fDriver.getDriverName(), fDriver.getTeamName());
             }
+            System.out.format("+------------------------------------------------+%n");
         }
     }
 
     /**
      * This Method Display Car Constructor/Team Name according to parsed parameter
-     * @param i - 1 : Team Deleted List ; 2 : All Team List
      */
-    private void DisplayCarConstructorNames(int i) {
-        if (i == 1) {
-            Collections.sort(teamNameList);
-            for (String teamNameElement : teamNameList) {
-                System.out.println("[" + teamNameList.indexOf(teamNameElement) + "] : " + teamNameElement);
-            }
-        } else if (i == 2){
-            Collections.sort(fullTeamList);
-            for (String element : fullTeamList) {
-                System.out.println("[" + fullTeamList.indexOf(element) + "] : " + element);
-            }
+    private void DisplayCarConstructorNames() {
+        Collections.sort(teamNameList);
+        for (String teamNameElement : teamNameList) {
+            System.out.println("[" + teamNameList.indexOf(teamNameElement) + "] : " + teamNameElement);
         }
     }
 
@@ -419,13 +474,14 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 
     /**
      * This Method takes Car Name user Input and Validate
+     *
      * @return - Validated Car Constructor/Team Name
      */
     private String CarConstructorValidator() {
         String teamName = "";
         boolean isValidOption;
         System.out.println("Please Select Car Constructor/Team from the List or Add Custom Team: ");
-        DisplayCarConstructorNames(1);
+        DisplayCarConstructorNames();
         System.out.println("[A] : Add a Custom Team");
 
         String[] nameListIndex = new String[teamNameList.size() + 1];
@@ -449,7 +505,6 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                     teamName = teamNameList.get(Integer.parseInt(option));
                     teamNameList.remove(teamName);
                 }
-                occupiedTeamNameList.add(teamName);
             } else {
                 System.out.println("Invalid Input! Try Again.");
             }
@@ -503,6 +558,77 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
             }
         } while (driverName.length() < 3 || driverName.length() > 26);
         return driverName;
+    }
+
+    /**
+     * @param formula1Driver
+     */
+    private void RaceDataUpdater(Formula1Driver formula1Driver) {
+        int racePosition;
+        formula1Driver.setRaceCount(1);
+        do {
+            String message = "Enter Driver " + formula1Driver.getDriverName() + "'s Team " + formula1Driver.getTeamName() + " Race Completed Position: ";
+            System.out.print(message);
+            while (!scanner.hasNextInt()) {
+                System.out.print("Invalid Input! Try Again.\n" + message);
+                scanner.next();
+            }
+            racePosition = scanner.nextInt();
+            if (racePosition < 0 || racePosition > 22) {
+                System.out.println("Invalid Input! Try Again.");
+            }
+        } while (racePosition < 0 || racePosition > 22);
+        switch (racePosition) {
+            case 1 -> {
+                formula1Driver.setCurrentPoints(25);
+                formula1Driver.setFirstPositionCount(1);
+            }
+            case 2 -> {
+                formula1Driver.setCurrentPoints(18);
+                formula1Driver.setSecondPositionCount(1);
+            }
+            case 3 -> {
+                formula1Driver.setCurrentPoints(15);
+                formula1Driver.setThirdPositionCount(1);
+            }
+            case 4 -> {
+                formula1Driver.setCurrentPoints(12);
+            }
+            case 5 -> {
+                formula1Driver.setCurrentPoints(10);
+            }
+            case 6 -> {
+                formula1Driver.setCurrentPoints(8);
+            }
+            case 7 -> {
+                formula1Driver.setCurrentPoints(6);
+            }
+            case 8 -> {
+                formula1Driver.setCurrentPoints(4);
+            }
+            case 9 -> {
+                formula1Driver.setCurrentPoints(2);
+            }
+            case 10 -> {
+                formula1Driver.setCurrentPoints(1);
+            }
+        }
+    }
+
+    /**
+     * @param dateString
+     * @return
+     */
+    private boolean DateValidator(String dateString) {
+        String validDateFormat = "yyyy/MM/dd";
+        try {
+            DateFormat dateFormat = new SimpleDateFormat(validDateFormat);
+            dateFormat.setLenient(false);
+            dateFormat.parse(dateString);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
     }
 
     /**
@@ -562,7 +688,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
     /**
      * @param val
      */
-    private static void printAsciiArt(boolean val) {
+    private static void PrintAsciiArt(boolean val) {
         String art1 = "\t\t\t█───█─▄▀▀─█───▄▀▀─▄▀▀▄─█▄─▄█─▄▀▀"
                 .concat("\n\t\t\t█───█─█───█───█───█──█─█▀▄▀█─█──")
                 .concat("\n\t\t\t█───█─█▀▀─█───█───█──█─█─▀─█─█▀▀")
