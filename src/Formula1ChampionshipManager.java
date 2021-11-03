@@ -261,21 +261,10 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
             System.out.println("No Driver Details Found!. Enter Driver Details from Menu \n\t\t\t¯\\_(ツ)_/¯");
         } else {
             for (Formula1Driver formula1Driver : driver) {
-                String statistics = "________________________________________________________"
-                        .concat("\nDriver's Name: " + formula1Driver.getDriverName())
-                        .concat("\nDriver's Nationality: " + formula1Driver.getDriverLocation())
-                        .concat("\nDriver's Team Name: " + formula1Driver.getTeamName())
-                        .concat("\nDriver's First Position Count: " + formula1Driver.getFirstPositionCount())
-                        .concat("\nDriver's Second Position Count: " + formula1Driver.getSecondPositionCount())
-                        .concat("\nDriver's Third Position Count: " + formula1Driver.getThirdPositionCount())
-                        .concat("\nDriver Participated Race Count: " + formula1Driver.getRaceCount())
-                        .concat("\nDriver's Current Points: " + formula1Driver.getCurrentPoints())
-                        .concat("\n--------------------------------------------------------");
-                System.out.println(statistics);
+                formula1Driver.PrintDriverTable();
             }
         }
         BackToMainMenu();
-//        ArrayList<Formula1Driver> f1d = driver.sort(Comparator.comparing(Driver::getPodiumCount));
     }
 
     /**
@@ -283,11 +272,17 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      */
     @Override
     public void DisplayDriverTable() {
-        System.out.println("\n\n\t\tFormula 1 Driver Table\nPOS - DRIVER NAME - NATIONALITY - CAR CONSTRUCTOR/TEAM NAME - PTS");
         Collections.sort(driver);
-        for (Formula1Driver fDriver: driver) {
-            System.out.println((driver.indexOf(fDriver)+1) + fDriver.getDriverName() + fDriver.getDriverLocation() + fDriver.getTeamName() + fDriver.getCurrentPoints());
+        String tableData = "| %3d | %-18s |     %-3s     | %-17s | %-4.2f |%n";
+        System.out.format("+---------------------------------------------------------------------+%n")
+                        .format("|                        Formula 1 Driver Table                       |%n")
+                        .format("+-----+--------------------+-------------+-------------------+--------+%n")
+                        .format("| POS |       DRIVER       | NATIONALITY |        CAR        |   PTS  |%n")
+                        .format("+-----+--------------------+-------------+-------------------+--------|%n");
+        for (Formula1Driver fDriver : driver) {
+            System.out.format(tableData, (driver.indexOf(fDriver)+1), fDriver.getDriverName(), fDriver.getDriverLocation(), fDriver.getTeamName(), fDriver.getCurrentPoints());
         }
+        System.out.format("+---------------------------------------------------------------------+%n");
         BackToMainMenu();
     }
 
@@ -503,10 +498,10 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
             Scanner sScan = new Scanner(System.in).useDelimiter("\n");
             System.out.print("\nEnter Driver's Name: ");
             driverName = sScan.next();
-            if (driverName.length() < 3) {
+            if (driverName.length() < 3 || driverName.length() > 26) {
                 System.out.println("Invalid Input! Try Again.");
             }
-        } while (driverName.length() < 3);
+        } while (driverName.length() < 3 || driverName.length() > 26);
         return driverName;
     }
 
