@@ -1,13 +1,14 @@
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 
 public class Formula1Driver extends Driver implements Serializable, Comparable<Formula1Driver> {
-    private static Formula1Driver f1D;
     //    firstPositionCount, secondPositionCount, thirdPositionCount, raceCountPerSeason
-    private final int firstPositionCount;
-    private final int secondPositionCount;
-    private final int thirdPositionCount;
-    private final int raceCount;
-    private final float currentPoints;
+    private int firstPositionCount;
+    private int secondPositionCount;
+    private int thirdPositionCount;
+    private int raceCount;
+    private float currentPoints;
 
     public Formula1Driver(String driverName, String driverLocation, String teamName, int firstPositionCount, int secondPositionCount, int thirdPositionCount, int raceCount, float currentPoints) {
         super(driverName, driverLocation, teamName);
@@ -18,28 +19,32 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
         this.currentPoints = currentPoints;
     }
 
-    public int getFirstPositionCount() {
-        return firstPositionCount;
-    }
-
-    public int getSecondPositionCount() {
-        return secondPositionCount;
-    }
-
-    public int getThirdPositionCount() {
-        return thirdPositionCount;
-    }
-
-    public int getRaceCount() {
-        return raceCount;
-    }
-
     public float getCurrentPoints() {
         return currentPoints;
     }
 
+    public void setFirstPositionCount(int firstPositionCount) {
+        this.firstPositionCount += firstPositionCount;
+    }
+
+    public void setSecondPositionCount(int secondPositionCount) {
+        this.secondPositionCount += secondPositionCount;
+    }
+
+    public void setThirdPositionCount(int thirdPositionCount) {
+        this.thirdPositionCount += thirdPositionCount;
+    }
+
+    public void setRaceCount(int raceCount) {
+        this.raceCount += raceCount;
+    }
+
+    public void setCurrentPoints(float currentPoints) {
+        this.currentPoints += currentPoints;
+    }
+
     @Override
-    public int compareTo(Formula1Driver temp) {
+    public int compareTo(@NotNull Formula1Driver temp) {
         if (temp.getCurrentPoints() == this.currentPoints) {
             return temp.firstPositionCount - this.firstPositionCount;
         } else {
