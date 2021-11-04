@@ -3,13 +3,23 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Serializable;
 
 public class Formula1Driver extends Driver implements Serializable, Comparable<Formula1Driver> {
-    //    firstPositionCount, secondPositionCount, thirdPositionCount, raceCountPerSeason
-    private int firstPositionCount;
-    private int secondPositionCount;
-    private int thirdPositionCount;
-    private int raceCount;
-    private float currentPoints;
+    private int firstPositionCount; // First Position Count Storing Field
+    private int secondPositionCount; // Second Position Count Storing Field
+    private int thirdPositionCount; // Third Position Count Storing Field
+    private int raceCount; // Race Count storing Field
+    private float currentPoints; // Driver Points Storing Field
 
+    /**
+     * Formula1Driver Class Constructor
+     * @param driverName - Driver Name String for Super Class Constructor
+     * @param driverLocation - Driver Location String for Super Class Constructor
+     * @param teamName - Team Name String for Super Class Constructor
+     * @param firstPositionCount - First Position Count integer
+     * @param secondPositionCount - Second Position Count integer
+     * @param thirdPositionCount - Third Position Count integer
+     * @param raceCount - Race count integer
+     * @param currentPoints - Driver's Current Points float
+     */
     public Formula1Driver(String driverName, String driverLocation, String teamName, int firstPositionCount, int secondPositionCount, int thirdPositionCount, int raceCount, float currentPoints) {
         super(driverName, driverLocation, teamName);
         this.firstPositionCount = firstPositionCount;
@@ -19,30 +29,59 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
         this.currentPoints = currentPoints;
     }
 
+    /**
+     * This Method Return Driver's Current Points
+     * @return - Current Point float
+     */
     public float getCurrentPoints() {
         return currentPoints;
     }
 
+    /**
+     * This Method Increment First Position Count by 1
+     * @param firstPositionCount - Integer Value always 1
+     */
     public void setFirstPositionCount(int firstPositionCount) {
         this.firstPositionCount += firstPositionCount;
     }
 
+    /**
+     * This Method Increment Second Positions Count by 1
+     * @param secondPositionCount - Integer Value always 1
+     */
     public void setSecondPositionCount(int secondPositionCount) {
         this.secondPositionCount += secondPositionCount;
     }
 
+    /**
+     * This Method Increment Third Position Count by 1
+     * @param thirdPositionCount - Integer Value always 1
+     */
     public void setThirdPositionCount(int thirdPositionCount) {
         this.thirdPositionCount += thirdPositionCount;
     }
 
+    /**
+     * This Method Increment Race Count by 1
+     * @param raceCount - Integer Value always 1
+     */
     public void setRaceCount(int raceCount) {
         this.raceCount += raceCount;
     }
 
+    /**
+     * This Method Adds Newly Calculated Points
+     * @param currentPoints - Integer Value changes according to position Driver take in race
+     */
     public void setCurrentPoints(float currentPoints) {
         this.currentPoints += currentPoints;
     }
 
+    /**
+     * This Overridden Method compare Points and First Position Count
+     * @param temp - Formula1Driver Object
+     * @return - Integer Value
+     */
     @Override
     public int compareTo(@NotNull Formula1Driver temp) {
         if (temp.getCurrentPoints() == this.currentPoints) {
@@ -52,8 +91,12 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
         }
     }
 
+    /**
+     * This Method Print Driver Details as a Table
+     */
     public void PrintDriverTable() {
-        int podiumCount = firstPositionCount + secondPositionCount + thirdPositionCount;
+        int podiumCount = firstPositionCount + secondPositionCount + thirdPositionCount; // Sum of first three positions
+        // Format of Each Data in the table
         String tableDName = "| Name         | %-18s |%n";
         String tableNationality = "| Nationality  | %-18s |%n";
         String tableTName = "| Team Name    | %-18s |%n";
