@@ -316,18 +316,26 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
             String dateString;
             boolean flag;
             boolean isValidDate;
+            boolean isPreviousRace = false;
             do {
+                DisplayOldRaceDates();
                 do {
                     System.out.print("\nEnter Date of the Race yyyy/MM/dd(Ex 2021/02/23): ");
                     dateString = scanner.next();
                     isValidDate = DateValidator(dateString);
+                    if (isValid) {
+                        isPreviousRace = raceDates.contains(dateString);
+                        if (isPreviousRace) {
+                            System.out.println("Race Already Added! Try Again.");
+                        }
+                    }
+                    if (dateString.length() == 10 && !isValidDate) {
+                        System.out.println("Invalid Date! Try Again.");
+                    }
                     if (dateString.length() != 10) {
                         System.out.println("Invalid Input! Try Again.");
                     }
-                    if (!isValidDate) {
-                        System.out.println("Invalid Date! Try Again.");
-                    }
-                } while (dateString.length() != 10 || !isValidDate);
+                } while (dateString.length() != 10 || !isValidDate || isPreviousRace);
 
                 raceDates.add(dateString);
 
@@ -683,6 +691,22 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
             }
         } while (currentPoints < 0.0);
         return currentPoints;
+    }
+
+    /**
+     *
+     */
+    private void DisplayOldRaceDates() {
+        if (raceDates.size() != 0) {
+            String tableData = "|     %-10s      |%n";
+            System.out.format("+---------------------+%n")
+                    .format("| Previous Race Dates |%n")
+                    .format("+---------------------+%n");
+            for (String raceDate : raceDates) {
+                System.out.format(tableData, raceDate);
+            }
+            System.out.format("-----------------------%n");
+        }
     }
 
     /**
