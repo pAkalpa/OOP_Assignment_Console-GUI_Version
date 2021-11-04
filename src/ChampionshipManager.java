@@ -1,5 +1,5 @@
 public interface ChampionshipManager {
-    // Declared all Method Signature's of mention in Problem
+    // Declared all Method Signature's mentioned in Problem
     void mainMenu();
     void CreateNewDriver();
     void DeleteDriver();

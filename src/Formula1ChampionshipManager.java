@@ -188,7 +188,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         String option;
         boolean flag;
         DisplayDriverNames();
-        if (driver.size() != 0) {
+        if (!driver.isEmpty()) {
             do {
                 do { // Select Driver validation
                     System.out.print("\nEnter Driver Index to Change Team or Enter " + driver.size() + " to Go Back to Menu : ");
@@ -249,7 +249,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         String option;
         boolean flag;
         System.out.println("Driver Statistics");
-        if (driver.size() == 0) { // Display Empty message if driver arrayList empty
+        if (driver.isEmpty()) { // Display Empty message if driver arrayList empty
             System.out.println("No Driver Details Found!. Enter Driver Details from Menu \n\t\t\t¯\\_(ツ)_/¯");
         } else {
             do {
@@ -288,7 +288,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      */
     @Override
     public void DisplayDriverTable() {
-        if (driver.size() != 0) { // Display Table if driver arrayList not empty
+        if (!driver.isEmpty()) { // Display Table if driver arrayList not empty
             Collections.sort(driver);
             String tableData = "| %3d | %-18s |     %-3s     | %-17s | %-4.2f |%n";
             System.out.format("+---------------------------------------------------------------------+%n")
@@ -311,7 +311,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      */
     @Override
     public void AddRace() {
-        if (driver.size() != 0) {
+        if (!driver.isEmpty()) {
             String option;
             String dateString; // store user input date
             boolean flag;
@@ -450,7 +450,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      * This Method Display Names of the Driver
      */
     private void DisplayDriverNames() {
-        if (driver.size() == 0) { // Validate for empty driver's
+        if (driver.isEmpty()) { // Validate for empty driver's
             System.out.println("No Driver's Found!\n\t¯\\_(ツ)_/¯");
         } else { // Print Driver List
             String tableData = "|  %2d   | %-18s | %-18s|%n";
@@ -692,7 +692,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      * This Method Prints Previous Added Race Dates
      */
     private void DisplayOldRaceDates() {
-        if (raceDates.size() != 0) { // Print Previous Race Dates in table
+        if (!raceDates.isEmpty()) { // Print Previous Race Dates in table
             String tableData = "|     %-10s      |%n";
             System.out.format("+---------------------+%n")
                     .format("| Previous Race Dates |%n")
