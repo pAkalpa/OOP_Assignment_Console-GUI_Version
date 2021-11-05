@@ -1,5 +1,3 @@
-import org.jetbrains.annotations.NotNull;
-
 import java.io.Serializable;
 
 public class Formula1Driver extends Driver implements Serializable, Comparable<Formula1Driver> {
@@ -83,7 +81,7 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
      * @return - Integer Value
      */
     @Override
-    public int compareTo(@NotNull Formula1Driver temp) {
+    public int compareTo(Formula1Driver temp) {
         if (temp.getCurrentPoints() == this.currentPoints) {
             return temp.firstPositionCount - this.firstPositionCount;
         } else {
