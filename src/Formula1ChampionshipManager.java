@@ -10,7 +10,6 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
     private static boolean isValid = true; // loop control variable of mainMenu method
     private static final Scanner scanner = new Scanner(System.in); // Create scanner object from Scanner Class
     private static ArrayList<Formula1Driver> driver = new ArrayList<>(); // Empty ArrayList declared for store Formula1Driver class
-    private static final String[] teamNameStringArray = {"Mercedes", "Red Bull Racing", "McLaren", "Ferrari", "AlphaTauri", "Aston Martin", "Williams", "Alfa Romeo Racing", "Haas F1 Team"}; // String Array with F1 Teams.
     private static List<String> teamNameList = new ArrayList<>(); // Empty ArrayList declared for store F1 Team Names
     private static List<String> raceDates = new ArrayList<>(); // Empty Arraylist declared for store Previous Race Dates
 
@@ -290,16 +289,16 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
     public void DisplayDriverTable() {
         if (!driver.isEmpty()) { // Display Table if driver arrayList not empty
             Collections.sort(driver);
-            String tableData = "| %3d | %-18s |     %-3s     | %-17s | %-4.2f |%n";
-            System.out.format("+---------------------------------------------------------------------+%n")
-                    .format("|                        Formula 1 Driver Table                       |%n")
-                    .format("+-----+--------------------+-------------+-------------------+--------+%n")
-                    .format("| POS |       DRIVER       | NATIONALITY |        CAR        |   PTS  |%n")
-                    .format("+-----+--------------------+-------------+-------------------+--------|%n");
+            String tableData = "| %3d | %-18s |     %-3s     | %-17s |  %-4.2f |%n";
+            System.out.format("+----------------------------------------------------------------------+%n")
+                    .format("|                         Formula 1 Driver Table                       |%n")
+                    .format("+-----+--------------------+-------------+-------------------+---------+%n")
+                    .format("| POS |       DRIVER       | NATIONALITY |        CAR        |   PTS   |%n")
+                    .format("+-----+--------------------+-------------+-------------------+---------|%n");
             for (Formula1Driver fDriver : driver) {
                 System.out.format(tableData, (driver.indexOf(fDriver) + 1), fDriver.getDriverName(), fDriver.getDriverLocation(), fDriver.getTeamName(), fDriver.getCurrentPoints());
             }
-            System.out.format("+---------------------------------------------------------------------+%n");
+            System.out.format("+----------------------------------------------------------------------+%n");
         } else {
             System.out.println("Try Adding Driver using Option in Main Menu -> Create A New Driver");
         }
