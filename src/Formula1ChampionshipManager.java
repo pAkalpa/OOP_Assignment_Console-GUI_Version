@@ -115,8 +115,10 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
             firstPositionCount = PositionCountValidator(1); // Invoke PositionCountValidator for take First Position Count and validate it
             secondPositionCount = PositionCountValidator(2); // Invoke PositionCountValidator for take Second Position Count and validate it
             thirdPositionCount = PositionCountValidator(3);// Invoke PositionCountValidator for take Third Position Count and validate it
-            raceCount = DriverRaceCountValidator(); // Invoke DriverRaceCountValidator for take Race Count and validate it;
-            currentPoints = DriverPointsValidator(); // Invoke DriverPointsValidator for take Points and validate it;
+            int oldRaceCount = firstPositionCount + secondPositionCount + thirdPositionCount; // Minimum race count can have for Driver
+            raceCount = DriverRaceCountValidator(oldRaceCount); // Invoke DriverRaceCountValidator for take Race Count and validate it;
+            int oldRacePoint = (firstPositionCount * 25) + (secondPositionCount * 18) + (thirdPositionCount * 15); // Minimum points can have for Driver
+            currentPoints = DriverPointsValidator(oldRacePoint); // Invoke DriverPointsValidator for take Points and validate it;
 
             driver.add(new Formula1Driver(driverName, driverLocation, teamName, firstPositionCount, secondPositionCount, thirdPositionCount, raceCount, currentPoints)); // save Formula1Driver object in driver Arraylist
 
@@ -666,7 +668,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      * This Method take and validate Race Count
      * @return - Return Race Count as Integer
      */
-    private int DriverRaceCountValidator() {
+    private int DriverRaceCountValidator(int oldRaceCount) {
         int raceCount;
         do { // validates Driver Race Count is valid
             System.out.print("Enter Driver's Race Count: ");
@@ -678,7 +680,10 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
             if (raceCount < 0) {
                 System.out.println("Invalid Input! Try Again.");
             }
-        } while (raceCount < 0);
+            if (raceCount < oldRaceCount) {
+                System.out.println("Impossible Race Count (Min:" + oldRaceCount + ") Try Again.");
+            }
+        } while (raceCount < 0 || raceCount < oldRaceCount);
         return raceCount;
     }
 
@@ -686,7 +691,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      * This Method take and Validate Driver Points
      * @return - Return Point driver got as float
      */
-    private float DriverPointsValidator() {
+    private float DriverPointsValidator(int oldRacePoint) {
         float currentPoints;
         do { // validates Driver current Points is valid
             System.out.print("Enter Driver's current Points: ");
@@ -698,7 +703,10 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
             if (currentPoints < 0.0) {
                 System.out.println("Invalid Input! Try Again.");
             }
-        } while (currentPoints < 0.0);
+            if (currentPoints < oldRacePoint) {
+                System.out.println("Impossible Race Points (Min:" + oldRacePoint + ") Try Again.");
+            }
+        } while (currentPoints < 0.0 || currentPoints < oldRacePoint);
         return currentPoints;
     }
 
