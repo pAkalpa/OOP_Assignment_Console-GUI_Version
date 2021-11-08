@@ -636,6 +636,21 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      */
     private String DriverLocationValidator() {
         String driverLocation;
+        String countryCodeTable = "\n+------------------------+------------------------+------------------------+------------------------+"
+                .concat("\n|     CODE - COUNTRY     |     CODE - COUNTRY     |     CODE - COUNTRY     |     CODE - COUNTRY     |")
+                .concat("\n+------------------------+------------------------+------------------------+------------------------+")
+                .concat("\n|  ARG  - Argentina      |  FIN  - Finland        |  MYS  - Malaysia       |  SWE  - Sweden         |")
+                .concat("\n|  AUS  - Australia      |  FRA  - France         |  MEX  - Mexico         |  CHE  - Switzerland    |")
+                .concat("\n|  AUT  - Austria        |  DEU  - Germany        |  MCO  - Monaco         |  THA  - Thailand       |")
+                .concat("\n|  BEL  - Belgium        |  HUN  - Hungary        |  MAR  - Morocco        |  GBR  - United Kingdom |")
+                .concat("\n|  BRA  - Brazil         |  IND  - India          |  NZL  - New Zealand    |  USA  - United States  |")
+                .concat("\n|  CAN  - Canada         |  IDN  - Indonesia      |  NLD  - Netherlands    |  URY  - Uruguay        |")
+                .concat("\n|  CHL  - Chile          |  IRL  - Ireland        |  PRT  - Portugal       |  VEN  - Venezuela      |")
+                .concat("\n|  COL  - Colombia       |  ITA  - Italy          |  RUS  - Russia         |                        |")
+                .concat("\n|  CZE  - Czech Republic |  JPN  - Japan          |  ZAF  - South Africa   |                        |")
+                .concat("\n|  DNK  - Denmark        |  LIE  - Liechtenstein  |  ESP  - Spain          |                        |")
+                .concat("\n+------------------------+------------------------+------------------------+------------------------+\n");
+        System.out.println(countryCodeTable);
         boolean isValidCountryCodeLength;
         boolean isValidCountryCode;
         do { // User input validation
