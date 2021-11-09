@@ -12,6 +12,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
     private static ArrayList<Formula1Driver> driver = new ArrayList<>(); // Empty ArrayList declared for store Formula1Driver class
     private static List<String> teamNameList = new ArrayList<>(); // Empty ArrayList declared for store F1 Team Names
     private static List<String> raceDates = new ArrayList<>(); // Empty Arraylist declared for store Previous Race Dates
+    private final ArrayList<Integer> positionList = new ArrayList<>();
 
     /**
      * Main Method Invoke four methods and Create Object
@@ -343,6 +344,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                 for (Formula1Driver formula1Driver : driver) { // Invoke RaceDataUpdater for each driver
                     RaceDataUpdater(formula1Driver);
                 }
+                positionList.clear();
 
                 do { // Exit validation
                     String inputRegexPattern = "[YN]+";
@@ -486,6 +488,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 
     /**
      * This Method takes Car Name user Input and Validate
+     *
      * @return - Validated Car Constructor/Team Name
      */
     private String CarConstructorValidator() {
@@ -525,6 +528,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 
     /**
      * This Method take user Inputs for custom team name
+     *
      * @return - Return Custom Team Name
      */
     private String AddNewTeam() {
@@ -558,6 +562,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 
     /**
      * This Method take and validate user input of Driver Name
+     *
      * @return - Driver Name as String
      */
     private String DriverNameValidator() {
@@ -575,6 +580,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 
     /**
      * This method Updates each driver's Data
+     *
      * @param formula1Driver - Formula1Driver Object
      */
     private void RaceDataUpdater(Formula1Driver formula1Driver) {
@@ -588,10 +594,15 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                 scanner.next();
             }
             racePosition = scanner.nextInt();
-            if (racePosition < 0 || racePosition > 22) {
-                System.out.println("Invalid Input! Try Again.");
+            if (racePosition < 1 || racePosition > 22) {
+                System.out.println("Position is Out of Range! Try Again.");
+            } else if (!positionList.contains(racePosition)) {
+                positionList.add(racePosition);
+                break;
+            } else {
+                System.out.println("Position Already Assigned! Try Again.");
             }
-        } while (racePosition < 0 || racePosition > 22);
+        } while (racePosition < 1 || racePosition > 22 || positionList.contains(racePosition));
         switch (racePosition) { // switch case to add points to each driver according to position
             case 1 -> {
                 formula1Driver.setCurrentPoints(25);
@@ -617,6 +628,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 
     /**
      * This Method Validates the Date
+     *
      * @param dateString - User Input Date as String
      * @return - inputted date validation
      */
@@ -634,6 +646,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 
     /**
      * This method validate Driver Location/Nationality
+     *
      * @return - Validated Driver Location in ISO-3166 ALPHA-3 Format
      */
     private String DriverLocationValidator() {
@@ -666,6 +679,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 
     /**
      * This Method take and validate Race Count
+     *
      * @return - Return Race Count as Integer
      */
     private int DriverRaceCountValidator(int oldRaceCount) {
@@ -689,6 +703,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 
     /**
      * This Method take and Validate Driver Points
+     *
      * @return - Return Point driver got as float
      */
     private float DriverPointsValidator(int oldRacePoint) {
@@ -728,6 +743,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 
     /**
      * This Method Prints Cool Ascii Arts
+     *
      * @param val - This Value set which ascii art to print
      */
     private static void PrintAsciiArt(boolean val) {
