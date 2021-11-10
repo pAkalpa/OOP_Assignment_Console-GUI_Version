@@ -292,7 +292,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
     public void DisplayDriverTable() {
         if (!driver.isEmpty()) { // Display Table if driver arrayList not empty
             Collections.sort(driver);
-            String tableData = "| %3d | %-18s |     %-3s     | %-17s |  %-4.2f |%n";
+            String tableData = "| %3d | %-18s |     %-3s     | %-17s |  %-4.1f |%n";
             System.out.format("+----------------------------------------------------------------------+%n")
                     .format("|                         Formula 1 Driver Table                       |%n")
                     .format("+-----+--------------------+-------------+-------------------+---------+%n")
@@ -631,14 +631,15 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      * This Method Validates the Date
      *
      * @param dateString - User Input Date as String
+     * @param season - This Season/Year as Integer
      * @return - inputted date validation
      */
-    private boolean DateValidator(String dateString,int season) {
+    private boolean DateValidator(String dateString, int season) {
         String validDateFormat = "yyyy/MM/dd"; // Valid date format
         try {
             DateFormat dateFormat = new SimpleDateFormat(validDateFormat);
-            Date seasonEnd = dateFormat.parse((season+1) + "/01/01");
-            Date seasonStart = dateFormat.parse((season-1) + "/12/31");
+            Date seasonEnd = dateFormat.parse((season + 1) + "/01/01");
+            Date seasonStart = dateFormat.parse((season - 1) + "/12/31");
             dateFormat.setLenient(false);
             Date parsedDate = dateFormat.parse(dateString);
             return parsedDate.after(seasonStart) && parsedDate.before(seasonEnd);
