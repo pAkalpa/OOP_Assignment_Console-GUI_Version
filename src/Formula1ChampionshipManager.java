@@ -561,10 +561,10 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                     scanner.next();
                 }
                 positionCount = scanner.nextInt();
-                if (positionCount < 0 || positionCount > 30) {
-                    System.out.println(errorMessage);
+                if (positionCount < 0 || positionCount > positionPerSeason) {
+                    System.out.println(errorMessage + "(Max:" + positionPerSeason + ")");
                 }
-            } while (positionCount < 0 || positionCount > 30);
+            } while (positionCount < 0 || positionCount > positionPerSeason);
             return positionCount;
         } else {
             System.out.println("Maximum Races Per Season is 30");
