@@ -12,7 +12,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
     private static ArrayList<Formula1Driver> driver = new ArrayList<>(); // Empty ArrayList declared for store Formula1Driver class
     private static List<String> teamNameList = new ArrayList<>(); // Empty ArrayList declared for store F1 Team Names
     private static List<String> raceDates = new ArrayList<>(); // Empty Arraylist declared for store Previous Race Dates
-    private final ArrayList<Integer> positionList = new ArrayList<>();
+    private final ArrayList<Integer> positionList = new ArrayList<>(); // Empty ArrayList declared for store Race positions assigned to drivers
 
     /**
      * Main Method Invoke four methods and Create Object
@@ -322,9 +322,10 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
             do {
                 DisplayOldRaceDates();
                 do { // Race Date Validation
-                    System.out.print("\nEnter Date of the Race yyyy/MM/dd(Ex 2021/02/23): ");
+                    int season = Calendar.getInstance().get(Calendar.YEAR);
+                    System.out.print("\nEnter Date of the Race for Season " + season + " yyyy/MM/dd(Ex " + season + "/02/23): ");
                     dateString = scanner.next();
-                    isValidDate = DateValidator(dateString);
+                    isValidDate = DateValidator(dateString,season);
                     if (isValid) { // if valid check for previous entries
                         isPreviousRace = raceDates.contains(dateString);
                         if (isPreviousRace) {
@@ -632,13 +633,15 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      * @param dateString - User Input Date as String
      * @return - inputted date validation
      */
-    private boolean DateValidator(String dateString) {
+    private boolean DateValidator(String dateString,int season) {
         String validDateFormat = "yyyy/MM/dd"; // Valid date format
         try {
             DateFormat dateFormat = new SimpleDateFormat(validDateFormat);
+            Date seasonEnd = dateFormat.parse((season+1) + "/01/01");
+            Date seasonStart = dateFormat.parse((season-1) + "/12/31");
             dateFormat.setLenient(false);
-            dateFormat.parse(dateString);
-            return true;
+            Date parsedDate = dateFormat.parse(dateString);
+            return parsedDate.after(seasonStart) && parsedDate.before(seasonEnd);
         } catch (ParseException e) {
             return false;
         }
