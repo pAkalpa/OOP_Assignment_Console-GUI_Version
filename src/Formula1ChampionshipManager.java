@@ -102,6 +102,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         int firstPositionCount, secondPositionCount, thirdPositionCount, raceCount; // Declare Integer Variables to store user inputs
         float currentPoints; // Declare Float Variable to store Points
         boolean flag; // Declare boolean Variable for validation
+        int totalPositionsPerSeason = 30;
 
         System.out.println("\nCreate New Driver");
 
@@ -113,9 +114,9 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
             driverName = DriverNameValidator(); // Invoke DriverNameValidator for take driver name from user and validate it
             driverLocation = DriverLocationValidator(); // Invoke DriverLocationValidator for take driver Location and validate it
             teamName = CarConstructorValidator(); // Invoke CarConstructorValidator for take Team Name and validate it
-            firstPositionCount = PositionCountValidator(1); // Invoke PositionCountValidator for take First Position Count and validate it
-            secondPositionCount = PositionCountValidator(2); // Invoke PositionCountValidator for take Second Position Count and validate it
-            thirdPositionCount = PositionCountValidator(3);// Invoke PositionCountValidator for take Third Position Count and validate it
+            firstPositionCount = PositionCountValidator(1, totalPositionsPerSeason); // Invoke PositionCountValidator for take First Position Count and validate it
+            secondPositionCount = PositionCountValidator(2, (totalPositionsPerSeason - firstPositionCount)); // Invoke PositionCountValidator for take Second Position Count and validate it
+            thirdPositionCount = PositionCountValidator(3, (totalPositionsPerSeason - (firstPositionCount + secondPositionCount)));// Invoke PositionCountValidator for take Third Position Count and validate it
             int oldRaceCount = firstPositionCount + secondPositionCount + thirdPositionCount; // Minimum race count can have for Driver
             raceCount = DriverRaceCountValidator(oldRaceCount); // Invoke DriverRaceCountValidator for take Race Count and validate it;
             int oldRacePoint = (firstPositionCount * 25) + (secondPositionCount * 18) + (thirdPositionCount * 15); // Minimum points can have for Driver
@@ -292,7 +293,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
     public void DisplayDriverTable() {
         if (!driver.isEmpty()) { // Display Table if driver arrayList not empty
             Collections.sort(driver);
-            String tableData = "| %3d | %-18s |     %-3s     | %-17s |  %-4.2f |%n";
+            String tableData = "| %3d | %-18s |     %-3s     | %-17s |  %-4.1f |%n";
             System.out.format("+----------------------------------------------------------------------+%n")
                     .format("|                         Formula 1 Driver Table                       |%n")
                     .format("+-----+--------------------+-------------+-------------------+---------+%n")
@@ -313,50 +314,54 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      */
     @Override
     public void AddRace() {
-        if (!driver.isEmpty()) {
-            String option;
-            String dateString; // store user input date
-            boolean flag;
-            boolean isValidDate; // boolean variable to store validity of date
-            boolean isPreviousRace = false; // boolean variable to store previous date validity
-            do {
-                DisplayOldRaceDates();
-                do { // Race Date Validation
-                    int season = Calendar.getInstance().get(Calendar.YEAR);
-                    System.out.print("\nEnter Date of the Race for Season " + season + " yyyy/MM/dd(Ex " + season + "/02/23): ");
-                    dateString = scanner.next();
-                    isValidDate = DateValidator(dateString,season);
-                    if (isValid) { // if valid check for previous entries
-                        isPreviousRace = raceDates.contains(dateString);
-                        if (isPreviousRace) {
-                            System.out.println("Race Already Added! Try Again.");
+        if (raceDates.size() <= 30) {
+            if (!driver.isEmpty()) {
+                String option;
+                String dateString; // store user input date
+                boolean flag;
+                boolean isValidDate; // boolean variable to store validity of date
+                boolean isPreviousRace = false; // boolean variable to store previous date validity
+                do {
+                    DisplayOldRaceDates();
+                    do { // Race Date Validation
+                        int season = Calendar.getInstance().get(Calendar.YEAR);
+                        System.out.print("\nEnter Date of the Race for Season " + season + " yyyy/MM/dd(Ex " + season + "/02/23): ");
+                        dateString = scanner.next();
+                        isValidDate = DateValidator(dateString, season);
+                        if (isValid) { // if valid check for previous entries
+                            isPreviousRace = raceDates.contains(dateString);
+                            if (isPreviousRace) {
+                                System.out.println("Race Already Added! Try Again.");
+                            }
                         }
-                    }
-                    if (dateString.length() == 10 && !isValidDate) { // validation for invalid dates
-                        System.out.println("Invalid Date! Try Again.");
-                    }
-                    if (dateString.length() != 10) { // validation for invalid length of user inputs
-                        System.out.println("Invalid Input! Try Again.");
-                    }
-                } while (dateString.length() != 10 || !isValidDate || isPreviousRace);
+                        if (dateString.length() == 10 && !isValidDate) { // validation for invalid dates
+                            System.out.println("Invalid Date! Try Again.");
+                        }
+                        if (dateString.length() != 10) { // validation for invalid length of user inputs
+                            System.out.println("Invalid Input! Try Again.");
+                        }
+                    } while (dateString.length() != 10 || !isValidDate || isPreviousRace);
 
-                raceDates.add(dateString); // store race date in raceDate arraylist
+                    raceDates.add(dateString); // store race date in raceDate arraylist
 
-                for (Formula1Driver formula1Driver : driver) { // Invoke RaceDataUpdater for each driver
-                    RaceDataUpdater(formula1Driver);
-                }
-                positionList.clear();
+                    for (Formula1Driver formula1Driver : driver) { // Invoke RaceDataUpdater for each driver
+                        RaceDataUpdater(formula1Driver);
+                    }
+                    positionList.clear();
 
-                do { // Exit validation
-                    String inputRegexPattern = "[YN]+";
-                    System.out.print("Do You Want to Add another Race?(Y/n) ");
-                    option = scanner.next().toUpperCase();
-                    flag = option.matches(inputRegexPattern);
-                    if (!flag) System.out.println("Invalid Input! Try Again.");
-                } while (!flag);
-            } while (!option.equals("N"));
+                    do { // Exit validation
+                        String inputRegexPattern = "[YN]+";
+                        System.out.print("Do You Want to Add another Race?(Y/n) ");
+                        option = scanner.next().toUpperCase();
+                        flag = option.matches(inputRegexPattern);
+                        if (!flag) System.out.println("Invalid Input! Try Again.");
+                    } while (!flag);
+                } while (!option.equals("N"));
+            } else {
+                System.out.println("Try Adding Driver using Option in Main Menu -> Create A New Driver");
+            }
         } else {
-            System.out.println("Try Adding Driver using Option in Main Menu -> Create A New Driver");
+            System.out.println("Maximum Races per Season is 30");
         }
         BackToMainMenu();
     }
@@ -540,25 +545,31 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 
     /**
      * @param position - This says which position need to take user input
+     * @param positionPerSeason - This is total number of races per season
      * @return - Position of Races driver previous participated
      */
-    private int PositionCountValidator(int position) {
+    private int PositionCountValidator(int position, int positionPerSeason) {
         int positionCount;
         String[] positionArray = {"First", "Second", "Third"};
         String promptMessage = "Enter Driver's no of " + positionArray[position - 1] + " Positions: ";
         String errorMessage = "Invalid Input! Try Again.";
-        do { // validate use inputs
-            System.out.print(promptMessage);
-            while (!scanner.hasNextInt()) {
-                System.out.print(errorMessage + "\n" + promptMessage);
-                scanner.next();
-            }
-            positionCount = scanner.nextInt();
-            if (positionCount < 0) {
-                System.out.println(errorMessage);
-            }
-        } while (positionCount < 0);
-        return positionCount;
+        if (positionPerSeason != 0) {
+            do { // validate use inputs
+                System.out.print(promptMessage);
+                while (!scanner.hasNextInt()) {
+                    System.out.print(errorMessage + "\n" + promptMessage);
+                    scanner.next();
+                }
+                positionCount = scanner.nextInt();
+                if (positionCount < 0 || positionCount > 30) {
+                    System.out.println(errorMessage);
+                }
+            } while (positionCount < 0 || positionCount > 30);
+            return positionCount;
+        } else {
+            System.out.println("Maximum Races Per Season is 30");
+            return 0;
+        }
     }
 
     /**
@@ -631,14 +642,15 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      * This Method Validates the Date
      *
      * @param dateString - User Input Date as String
+     * @param season - This Season/Year as Integer
      * @return - inputted date validation
      */
-    private boolean DateValidator(String dateString,int season) {
+    private boolean DateValidator(String dateString, int season) {
         String validDateFormat = "yyyy/MM/dd"; // Valid date format
         try {
             DateFormat dateFormat = new SimpleDateFormat(validDateFormat);
-            Date seasonEnd = dateFormat.parse((season+1) + "/01/01");
-            Date seasonStart = dateFormat.parse((season-1) + "/12/31");
+            Date seasonEnd = dateFormat.parse((season + 1) + "/01/01");
+            Date seasonStart = dateFormat.parse((season - 1) + "/12/31");
             dateFormat.setLenient(false);
             Date parsedDate = dateFormat.parse(dateString);
             return parsedDate.after(seasonStart) && parsedDate.before(seasonEnd);
