@@ -295,16 +295,17 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
     public void DisplayDriverTable() {
         if (!driver.isEmpty()) { // Display Table if driver arrayList not empty
             Collections.sort(driver);
-            String tableData = "| %3d | %-18s |     %-3s     | %-17s |  %-4.1f |%n";
-            System.out.format("+----------------------------------------------------------------------+%n")
-                    .format("|                         Formula 1 Driver Table                       |%n")
-                    .format("+-----+--------------------+-------------+-------------------+---------+%n")
-                    .format("| POS |       DRIVER       | NATIONALITY |        CAR        |   PTS   |%n")
-                    .format("+-----+--------------------+-------------+-------------------+---------|%n");
+            String tableData = "| %3d | %-18s |     %-3s     | %-17s | %-3d |  %-4.1f  |%n";
+            System.out.format("+----------------------------------------------------------------------------+%n")
+                    .format("|                            Formula 1 Driver Table                          |%n")
+                    .format("|  (FPS - First Position Count)                                              |%n")
+                    .format("+-----+--------------------+-------------+-------------------+-----+---------+%n")
+                    .format("| POS |       DRIVER       | NATIONALITY |        CAR        | FPS |   PTS   |%n")
+                    .format("+-----+--------------------+-------------+-------------------+-----+---------|%n");
             for (Formula1Driver fDriver : driver) {
-                System.out.format(tableData, (driver.indexOf(fDriver) + 1), fDriver.getDriverName(), fDriver.getDriverLocation(), fDriver.getTeamName(), fDriver.getCurrentPoints());
+                System.out.format(tableData, (driver.indexOf(fDriver) + 1), fDriver.getDriverName(), fDriver.getDriverLocation(), fDriver.getTeamName(), fDriver.getFirstPositionCount(), fDriver.getCurrentPoints());
             }
-            System.out.format("+----------------------------------------------------------------------+%n");
+            System.out.format("+----------------------------------------------------------------------------+%n");
         } else {
             System.out.println("Try Adding Driver using Option in Main Menu -> Create A New Driver");
         }

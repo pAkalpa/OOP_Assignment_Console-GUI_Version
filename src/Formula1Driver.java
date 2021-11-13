@@ -36,6 +36,14 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
     }
 
     /**
+     * This Method Return Driver's First Position Count
+     * @return - First Position Count
+     */
+    public int getFirstPositionCount() {
+        return firstPositionCount;
+    }
+
+    /**
      * This Method Increment First Position Count by 1
      * @param firstPositionCount - Integer Value always 1
      */
