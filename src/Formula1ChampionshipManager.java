@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -86,7 +87,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                 //105 or ANR
                 case 10, 11 -> AddRace();
                 //106 or OGA
-//                case 12, 13 ->
+                case 12, 13 -> RunGUI();
                 //999 or EXT
                 case 14, 15 -> isValid = false;
             }
@@ -768,5 +769,12 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 
         String printArt = val ? art1 : art2; // ternary condition for choose which art to print
         System.out.println(printArt);
+    }
+
+    /**
+     * This Method Run GUI Part of the Programme
+     */
+    private void RunGUI() {
+        SwingUtilities.invokeLater(() -> new GUI_APP(driver, teamNameList, raceDates));
     }
 }
