@@ -46,6 +46,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                     .concat("\n| 103 or DAS |\tDisplay Statistics                         |")
                     .concat("\n| 104 or DDT |\tDisplay F1 Driver Table                    |")
                     .concat("\n| 105 or ANR |\tAdd Race                                   |")
+                    .concat("\n| 106 or OGA |\tOpen GUI Application                       |")
                     .concat("\n| 999 or EXT |\tExit the Program                           |")
                     .concat("\n------------------------------------------------------------")
                     .concat("\nChoose Option: "); // Console Main Menu String
@@ -65,7 +66,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      * @param code - user input taking from the main menu
      */
     private void mainMenuInputValidation(String code) {
-        String[] validInputArray = {"100", "CND", "101", "DAD", "102", "CTT", "103", "DAS", "104", "DDT", "105", "ANR", "999", "EXT"};
+        String[] validInputArray = {"100", "CND", "101", "DAD", "102", "CTT", "103", "DAS", "104", "DDT", "105", "ANR", "106", "OGA", "999", "EXT"};
         int index;
         List<String> validInputList = Arrays.asList(validInputArray);
 
@@ -84,8 +85,10 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                 case 8, 9 -> DisplayDriverTable();
                 //105 or ANR
                 case 10, 11 -> AddRace();
+                //106 or OGA
+//                case 12, 13 ->
                 //999 or EXT
-                case 12, 13 -> isValid = false;
+                case 14, 15 -> isValid = false;
             }
         } else {
             isValid = true;
