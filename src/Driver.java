@@ -1,51 +1,12 @@
 import java.io.Serializable;
 
 public abstract class Driver implements Serializable {
-    private final String driverName; // Driver Name storing field
-    private final String driverLocation; // Driver Location storing field
-    private String teamName; // Team Name Storing field
-
-    /**
-     * Driver Class Constructor
-     * @param driverName - Driver Name String
-     * @param driverLocation - Driver Location String
-     * @param teamName - Team Name String
-     */
-    public Driver(String driverName, String driverLocation, String teamName) {
-        this.driverName = driverName;
-        this.driverLocation = driverLocation;
-        this.teamName = teamName;
-    }
-
-    /**
-     * This Method Return Driver Name String
-     * @return - Driver Name String
-     */
-    public String getDriverName() {
-        return driverName;
-    }
-
-    /**
-     * This Method Return Driver Location String
-     * @return - Driver Location String
-     */
-    public String getDriverLocation() {
-        return driverLocation;
-    }
-
-    /**
-     * This Method Return Team Name String
-     * @return - Team Name String
-     */
-    public String getTeamName() {
-        return teamName;
-    }
-
-    /**
-     * This Method Set Team Name
-     * @param teamName - New Team Name String
-     */
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
-    }
+    String driverName; // Driver Name storing field
+    String driverLocation; // Driver Location storing field
+    String teamName; // Team Name Storing field
+    int firstPositionCount; // First Position Count Storing Field
+    int secondPositionCount; // Second Position Count Storing Field
+    int thirdPositionCount; // Third Position Count Storing Field
+    int raceCount; // Race Count storing Field
+    float currentPoints; // Driver Points Storing Field
 }

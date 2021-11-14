@@ -1,17 +1,11 @@
 import java.io.Serializable;
 
 public class Formula1Driver extends Driver implements Serializable, Comparable<Formula1Driver> {
-    private int firstPositionCount; // First Position Count Storing Field
-    private int secondPositionCount; // Second Position Count Storing Field
-    private int thirdPositionCount; // Third Position Count Storing Field
-    private int raceCount; // Race Count storing Field
-    private float currentPoints; // Driver Points Storing Field
-
     /**
      * Formula1Driver Class Constructor
-     * @param driverName - Driver Name String for Super Class Constructor
-     * @param driverLocation - Driver Location String for Super Class Constructor
-     * @param teamName - Team Name String for Super Class Constructor
+     * @param driverName - Driver Name String
+     * @param driverLocation - Driver Location String
+     * @param teamName - Team Name String
      * @param firstPositionCount - First Position Count integer
      * @param secondPositionCount - Second Position Count integer
      * @param thirdPositionCount - Third Position Count integer
@@ -19,7 +13,9 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
      * @param currentPoints - Driver's Current Points float
      */
     public Formula1Driver(String driverName, String driverLocation, String teamName, int firstPositionCount, int secondPositionCount, int thirdPositionCount, int raceCount, float currentPoints) {
-        super(driverName, driverLocation, teamName);
+        this.driverName = driverName;
+        this.driverLocation = driverLocation;
+        this.teamName = teamName;
         this.firstPositionCount = firstPositionCount;
         this.secondPositionCount = secondPositionCount;
         this.thirdPositionCount = thirdPositionCount;
@@ -98,8 +94,40 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
     }
 
     /**
-     * This Method Print Driver Details as a Table
+     * This Method Return Driver Name String
+     * @return - Driver Name String
      */
+    public String getDriverName() {
+        return driverName;
+    }
+
+    /**
+     * This Method Return Driver Location String
+     * @return - Driver Location String
+     */
+    public String getDriverLocation() {
+        return driverLocation;
+    }
+
+    /**
+     * This Method Return Team Name String
+     * @return - Team Name String
+     */
+    public String getTeamName() {
+        return teamName;
+    }
+
+    /**
+     * This Method Set Team Name
+     * @param teamName - New Team Name String
+     */
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
+
+        /**
+         * This Method Print Driver Details as a Table
+         */
     public void PrintDriverTable() {
         int podiumCount = firstPositionCount + secondPositionCount + thirdPositionCount; // Sum of first three positions
         // Format of Each Data in the table
@@ -121,9 +149,9 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
                 .format("|(PRC = Participated Race Count)    |%n")
                 .format("|(Pts = Current Points)             |%n")
                 .format("+--------------+--------------------+%n")
-                .format(tableDName, super.getDriverName())
-                .format(tableNationality, super.getDriverLocation())
-                .format(tableTName, super.getTeamName())
+                .format(tableDName, driverName)
+                .format(tableNationality, driverLocation)
+                .format(tableTName, teamName)
                 .format(tableFPC, firstPositionCount)
                 .format(tableSPC, secondPositionCount)
                 .format(tableTPC, thirdPositionCount)
