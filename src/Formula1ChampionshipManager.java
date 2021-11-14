@@ -36,20 +36,20 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
     @Override
     public void mainMenu() {
         while (isValid) { //
-            String menuItems = "\n------------------------------------------------------------"
-                    .concat("\n|  _    _                                                  |")
-                    .concat("\n|  \\`../ |o_..__   Formula1 Championship Manager Program   |")
-                    .concat("\n|`.,(_)______(_).>                                         |")
-                    .concat("\n|----------------------------------------------------------|")
-                    .concat("\n| 100 or CND |\tCreate a New Driver                        |")
-                    .concat("\n| 101 or DAD |\tDelete a Driver                            |")
-                    .concat("\n| 102 or CTT |\tChange the Team(Manufacturer)              |")
-                    .concat("\n| 103 or DAS |\tDisplay Statistics                         |")
-                    .concat("\n| 104 or DDT |\tDisplay F1 Driver Table                    |")
-                    .concat("\n| 105 or ANR |\tAdd Race                                   |")
-                    .concat("\n| 106 or OGA |\tOpen GUI Application                       |")
-                    .concat("\n| 999 or EXT |\tExit the Program                           |")
-                    .concat("\n------------------------------------------------------------")
+            String menuItems = "\n╔══════════════════════════════════════════════════════════╗"
+                    .concat("\n║  _    _                                                  ║")
+                    .concat("\n║  \\`../ |o_..__   Formula1 Championship Manager Program   ║")
+                    .concat("\n║`.,(_)______(_).>                                         ║")
+                    .concat("\n╔══════════════════════════════════════════════════════════╗")
+                    .concat("\n║ 100 or CND |\tCreate a New Driver                        ║")
+                    .concat("\n║ 101 or DAD |\tDelete a Driver                            ║")
+                    .concat("\n║ 102 or CTT |\tChange the Team(Manufacturer)              ║")
+                    .concat("\n║ 103 or DAS |\tDisplay Statistics                         ║")
+                    .concat("\n║ 104 or DDT |\tDisplay F1 Driver Table                    ║")
+                    .concat("\n║ 105 or ANR |\tAdd Race                                   ║")
+                    .concat("\n║ 106 or OGA |\tOpen GUI Application                       ║")
+                    .concat("\n║ 999 or EXT |\tExit the Program                           ║")
+                    .concat("\n╚══════════════════════════════════════════════════════════╝")
                     .concat("\nChoose Option: "); // Console Main Menu String
             System.out.print(menuItems);
             boolean hasNext = scanner.hasNext();
@@ -296,17 +296,17 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
     public void DisplayDriverTable() {
         if (!driver.isEmpty()) { // Display Table if driver arrayList not empty
             Collections.sort(driver);
-            String tableData = "| %3d | %-18s |     %-3s     | %-17s | %-3d |  %-4.1f  |%n";
-            System.out.format("+----------------------------------------------------------------------------+%n")
-                    .format("|                            Formula 1 Driver Table                          |%n")
-                    .format("|  (FPS - First Position Count)                                              |%n")
-                    .format("+-----+--------------------+-------------+-------------------+-----+---------+%n")
-                    .format("| POS |       DRIVER       | NATIONALITY |        CAR        | FPS |   PTS   |%n")
-                    .format("+-----+--------------------+-------------+-------------------+-----+---------|%n");
+            String tableData = "║ %3d ║ %-18s ║     %-3s     ║ %-17s ║ %-3d ║  %-4.1f  ║%n";
+            System.out.format("╔════════════════════════════════════════════════════════════════════════════╗%n")
+                    .format("║                            Formula 1 Driver Table                          ║%n")
+                    .format("║  (FPS - First Position Count)                                              ║%n")
+                    .format("╔════════════════════════════════════════════════════════════════════════════╗%n")
+                    .format("║ POS ║       DRIVER       ║ NATIONALITY ║        CAR        ║ FPS ║   PTS   ║%n")
+                    .format("╔════════════════════════════════════════════════════════════════════════════╗%n");
             for (Formula1Driver fDriver : driver) {
                 System.out.format(tableData, (driver.indexOf(fDriver) + 1), fDriver.getDriverName(), fDriver.getDriverLocation(), fDriver.getTeamName(), fDriver.getFirstPositionCount(), fDriver.getCurrentPoints());
             }
-            System.out.format("+----------------------------------------------------------------------------+%n");
+            System.out.format("╚════════════════════════════════════════════════════════════════════════════╝%n");
         } else {
             System.out.println("Try Adding Driver using Option in Main Menu -> Create A New Driver");
         }
@@ -462,16 +462,16 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
         if (driver.isEmpty()) { // Validate for empty driver's
             System.out.println("No Driver's Found!\n\t¯\\_(ツ)_/¯");
         } else { // Print Driver List
-            String tableData = "|  %2d   | %-18s | %-18s|%n";
-            System.out.format("+------------------------------------------------+%n")
-                    .format("|                List of Driver's                |%n")
-                    .format("+------------------------------------------------+%n")
-                    .format("| Index |     DRIVER NAME    |       TEAM        |%n")
-                    .format("+------------------------------------------------+%n");
+            String tableData = "║  %2d   ║ %-18s ║ %-18s║%n";
+            System.out.format("╔════════════════════════════════════════════════╗%n")
+                    .format("║                List of Driver's                ║%n")
+                    .format("╔════════════════════════════════════════════════╗%n")
+                    .format("║ Index ║     DRIVER NAME    ║       TEAM        ║%n")
+                    .format("╔════════════════════════════════════════════════╗%n");
             for (Formula1Driver fDriver : driver) {
                 System.out.format(tableData, driver.indexOf(fDriver), fDriver.getDriverName(), fDriver.getTeamName());
             }
-            System.out.format("+------------------------------------------------+%n");
+            System.out.format("╚════════════════════════════════════════════════╝%n");
         }
     }
 
@@ -660,20 +660,20 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      */
     private String DriverLocationValidator() {
         String driverLocation;
-        String countryCodeTable = "\n+------------------------+------------------------+------------------------+------------------------+"
-                .concat("\n|     CODE - COUNTRY     |     CODE - COUNTRY     |     CODE - COUNTRY     |     CODE - COUNTRY     |")
-                .concat("\n+------------------------+------------------------+------------------------+------------------------+")
-                .concat("\n|  ARG  - Argentina      |  FIN  - Finland        |  MYS  - Malaysia       |  SWE  - Sweden         |")
-                .concat("\n|  AUS  - Australia      |  FRA  - France         |  MEX  - Mexico         |  CHE  - Switzerland    |")
-                .concat("\n|  AUT  - Austria        |  DEU  - Germany        |  MCO  - Monaco         |  THA  - Thailand       |")
-                .concat("\n|  BEL  - Belgium        |  HUN  - Hungary        |  MAR  - Morocco        |  GBR  - United Kingdom |")
-                .concat("\n|  BRA  - Brazil         |  IND  - India          |  NZL  - New Zealand    |  USA  - United States  |")
-                .concat("\n|  CAN  - Canada         |  IDN  - Indonesia      |  NLD  - Netherlands    |  URY  - Uruguay        |")
-                .concat("\n|  CHL  - Chile          |  IRL  - Ireland        |  PRT  - Portugal       |  VEN  - Venezuela      |")
-                .concat("\n|  COL  - Colombia       |  ITA  - Italy          |  RUS  - Russia         |                        |")
-                .concat("\n|  CZE  - Czech Republic |  JPN  - Japan          |  ZAF  - South Africa   |                        |")
-                .concat("\n|  DNK  - Denmark        |  LIE  - Liechtenstein  |  ESP  - Spain          |                        |")
-                .concat("\n+------------------------+------------------------+------------------------+------------------------+\n");
+        String countryCodeTable = "\n╔═══════════════════════════════════════════════════════════════════════════════════════════════════╗"
+                .concat("\n║     CODE - COUNTRY     ║     CODE - COUNTRY     ║     CODE - COUNTRY     ║     CODE - COUNTRY     ║")
+                .concat("\n╔═══════════════════════════════════════════════════════════════════════════════════════════════════╗")
+                .concat("\n║  ARG  - Argentina      ║  FIN  - Finland        ║  MYS  - Malaysia       ║  SWE  - Sweden         ║")
+                .concat("\n║  AUS  - Australia      ║  FRA  - France         ║  MEX  - Mexico         ║  CHE  - Switzerland    ║")
+                .concat("\n║  AUT  - Austria        ║  DEU  - Germany        ║  MCO  - Monaco         ║  THA  - Thailand       ║")
+                .concat("\n║  BEL  - Belgium        ║  HUN  - Hungary        ║  MAR  - Morocco        ║  GBR  - United Kingdom ║")
+                .concat("\n║  BRA  - Brazil         ║  IND  - India          ║  NZL  - New Zealand    ║  USA  - United States  ║")
+                .concat("\n║  CAN  - Canada         ║  IDN  - Indonesia      ║  NLD  - Netherlands    ║  URY  - Uruguay        ║")
+                .concat("\n║  CHL  - Chile          ║  IRL  - Ireland        ║  PRT  - Portugal       ║  VEN  - Venezuela      ║")
+                .concat("\n║  COL  - Colombia       ║  ITA  - Italy          ║  RUS  - Russia         ║                        ║")
+                .concat("\n║  CZE  - Czech Republic ║  JPN  - Japan          ║  ZAF  - South Africa   ║                        ║")
+                .concat("\n║  DNK  - Denmark        ║  LIE  - Liechtenstein  ║  ESP  - Spain          ║                        ║")
+                .concat("\n╚═══════════════════════════════════════════════════════════════════════════════════════════════════╝\n");
         System.out.println(countryCodeTable);
         boolean isValidCountryCodeLength;
         boolean isValidCountryCode;
@@ -739,14 +739,14 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      */
     private void DisplayOldRaceDates() {
         if (!raceDates.isEmpty()) { // Print Previous Race Dates in table
-            String tableData = "|     %-10s      |%n";
-            System.out.format("+---------------------+%n")
-                    .format("| Previous Race Dates |%n")
-                    .format("+---------------------+%n");
+            String tableData = "║     %-10s      ║%n";
+            System.out.format("╔═════════════════════╗%n")
+                    .format("║ Previous Race Dates ║%n")
+                    .format("╔═════════════════════╗%n");
             for (String raceDate : raceDates) {
                 System.out.format(tableData, raceDate);
             }
-            System.out.format("-----------------------%n");
+            System.out.format("╚═════════════════════╝%n");
         }
     }
 

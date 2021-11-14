@@ -131,24 +131,24 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
     public void PrintDriverTable() {
         int podiumCount = firstPositionCount + secondPositionCount + thirdPositionCount; // Sum of first three positions
         // Format of Each Data in the table
-        String tableDName = "| Name         | %-18s |%n";
-        String tableNationality = "| Nationality  | %-18s |%n";
-        String tableTName = "| Team Name    | %-18s |%n";
-        String tableFPC = "| FPC          | %-18d |%n";
-        String tableSPC = "| SPC          | %-18d |%n";
-        String tableTPC = "| TPC          | %-18d |%n";
-        String tablePodium = "| Podium Count | %-18d |%n";
-        String tablePRC = "| PRC          | %-18d |%n";
-        String tablePts = "| Pts          | %-18.1f |%n";
+        String tableDName = "║ Name         ║ %-18s ║%n";
+        String tableNationality = "║ Nationality  ║ %-18s ║%n";
+        String tableTName = "║ Team Name    ║ %-18s ║%n";
+        String tableFPC = "║ FPC          ║ %-18d ║%n";
+        String tableSPC = "║ SPC          ║ %-18d ║%n";
+        String tableTPC = "║ TPC          ║ %-18d ║%n";
+        String tablePodium = "║ Podium Count ║ %-18d ║%n";
+        String tablePRC = "║ PRC          ║ %-18d ║%n";
+        String tablePts = "║ Pts          ║ %-18.1f ║%n";
 
-        System.out.format("+-----------------------------------+%n")
-                .format("|           Driver Details          |%n")
-                .format("|(FPC = First Position Count)       |%n")
-                .format("|(SPC = Second Position Count)      |%n")
-                .format("|(TPC = Third Position Count)       |%n")
-                .format("|(PRC = Participated Race Count)    |%n")
-                .format("|(Pts = Current Points)             |%n")
-                .format("+--------------+--------------------+%n")
+        System.out.format("╔═══════════════════════════════════╗%n")
+                .format("║           Driver Details          ║%n")
+                .format("║(FPC = First Position Count)       ║%n")
+                .format("║(SPC = Second Position Count)      ║%n")
+                .format("║(TPC = Third Position Count)       ║%n")
+                .format("║(PRC = Participated Race Count)    ║%n")
+                .format("║(Pts = Current Points)             ║%n")
+                .format("╔═══════════════════════════════════╗%n")
                 .format(tableDName, driverName)
                 .format(tableNationality, driverLocation)
                 .format(tableTName, teamName)
@@ -158,7 +158,7 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
                 .format(tablePodium, podiumCount)
                 .format(tablePRC, raceCount)
                 .format(tablePts, currentPoints)
-                .format("+-----------------------------------+%n\n");
+                .format("╚═══════════════════════════════════╝%n\n");
 
     }
 }
