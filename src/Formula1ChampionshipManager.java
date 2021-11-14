@@ -14,6 +14,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
     private static List<String> teamNameList = new ArrayList<>(); // Empty ArrayList declared for store F1 Team Names
     private static List<String> raceDates = new ArrayList<>(); // Empty Arraylist declared for store Previous Race Dates
     private final ArrayList<Integer> positionList = new ArrayList<>(); // Empty ArrayList declared for store Race positions assigned to drivers
+    private static ArrayList<RaceData> races = new ArrayList<>(); // Empty Arraylist declared for store RaceData Class
 
     /**
      * Main Method Invoke four methods and Create Object
@@ -57,6 +58,11 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                 String code = scanner.next().toUpperCase(); // get user input and store in code variable
                 mainMenuInputValidation(code); // Invoke menuInputValidation method and parse code as argument
             }
+        }
+        for (RaceData race : races) {
+            System.out.println(race.getRaceDate());
+            System.out.println(race.getDriverNames());
+            System.out.println(race.getDriverPositions());
         }
         System.out.println("Exiting Program...");
     }
@@ -346,9 +352,10 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                 } while (dateString.length() != 10 || !isValidDate || isPreviousRace);
 
                 raceDates.add(dateString); // store race date in raceDate arraylist
+                races.add(new RaceData(dateString));
 
                 for (Formula1Driver formula1Driver : driver) { // Invoke RaceDataUpdater for each driver
-                    RaceDataUpdater(formula1Driver);
+                    RaceDataUpdater(formula1Driver, dateString);
                 }
                 positionList.clear();
 
@@ -389,6 +396,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
             saveFile.writeObject(teamNameList);
             saveFile.writeObject(driver);
             saveFile.writeObject(raceDates);
+            saveFile.writeObject(races);
 
 //            System.out.println("File Saved Successfully!");
 
@@ -427,6 +435,8 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                 driver = CastArrayList(list2);
                 Object list3 = savedFile.readObject();
                 raceDates = CastList(list3);
+                Object list4 = savedFile.readObject();
+                races = CastRaceDataArrayList(list4);
             }
         } catch (Exception e) {
             System.out.println("Oops! Something went Wrong while loading Save File.");
@@ -453,6 +463,17 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
     @SuppressWarnings("unchecked")
     private ArrayList<Formula1Driver> CastArrayList(Object obj) {
         return (ArrayList<Formula1Driver>) obj;
+    }
+
+    /**
+     * This Method Cast RaceData ArrayList
+     *
+     * @param obj - ArrayList
+     * @return - Object cast into ArrayList
+     */
+    @SuppressWarnings("unchecked")
+    private ArrayList<RaceData> CastRaceDataArrayList(Object obj) {
+        return (ArrayList<RaceData>) obj;
     }
 
     /**
@@ -589,7 +610,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      *
      * @param formula1Driver - Formula1Driver Object
      */
-    private void RaceDataUpdater(Formula1Driver formula1Driver) {
+    private void RaceDataUpdater(Formula1Driver formula1Driver, String date) {
         int racePosition;
         formula1Driver.setRaceCount(1);
         do { // User Input Validation
@@ -609,6 +630,13 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                 System.out.println("Position Already Assigned! Try Again.");
             }
         } while (racePosition < 1 || racePosition > 22 || positionList.contains(racePosition));
+
+        for (RaceData race : races) {
+            if (race.getRaceDate().equals(date)) {
+                race.setDriverNameAndPosition(formula1Driver.getDriverName(),racePosition);
+            }
+        }
+
         switch (racePosition) { // switch case to add points to each driver according to position
             case 1 -> {
                 formula1Driver.setCurrentPoints(25);
@@ -775,6 +803,6 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      * This Method Run GUI Part of the Programme
      */
     private void RunGUI() {
-        SwingUtilities.invokeLater(() -> new GUI_APP(driver, teamNameList, raceDates));
+        SwingUtilities.invokeLater(() -> new GUI_APP(driver, races, teamNameList));
     }
 }
