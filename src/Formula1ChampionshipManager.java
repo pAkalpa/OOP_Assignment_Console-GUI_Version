@@ -393,7 +393,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
 //            System.out.println("File Saved Successfully!");
 
         } catch (IOException e) {
-            System.out.println("Oops! Something went Wrong.");
+            System.out.println("Oops! Something went Wrong while Saving File.");
         }
     }
 
@@ -408,7 +408,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
             if (!file.exists()) {
                 System.out.println("No Save Data Found!\n\t¯\\_(ツ)_/¯");
             } else {
-//                System.out.println("File Loading....");
+                System.out.println("Save File Loaded");
                 String savedFileName = "./saveData/saveData.dat";
 
                 FileInputStream savedDataFile = new FileInputStream(savedFileName);
@@ -429,7 +429,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                 raceDates = CastList(list3);
             }
         } catch (Exception e) {
-            System.out.println("Oops! Something went Wrong.");
+            System.out.println("Oops! Something went Wrong while loading Save File.");
         }
     }
 
