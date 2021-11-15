@@ -302,7 +302,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
     public void DisplayDriverTable() {
         if (!driver.isEmpty()) { // Display Table if driver arrayList not empty
             Collections.sort(driver);
-            String tableData = "║ %3d ║ %-18s ║     %-3s     ║ %-17s ║ %-3d ║  %-4.1f  ║%n";
+            String tableData = "║ %3d ║ %-18s ║     %-3s     ║ %-17s ║ %-3d ║  %-5.1f  ║%n";
             System.out.format("╔════════════════════════════════════════════════════════════════════════════╗%n")
                     .format("║                            Formula 1 Driver Table                          ║%n")
                     .format("║  (FPS - First Position Count)                                              ║%n")
