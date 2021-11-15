@@ -40,6 +40,22 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
     }
 
     /**
+     * This Method Return Driver's Second Position Count
+     * @return - Second Position Count
+     */
+    public int getSecondPositionCount() {
+        return secondPositionCount;
+    }
+
+    /**
+     * This Method Return Driver's Third Position Count
+     * @return - Third Position Count
+     */
+    public int getThirdPositionCount() {
+        return thirdPositionCount;
+    }
+
+    /**
      * This Method Increment First Position Count by 1
      * @param firstPositionCount - Integer Value always 1
      */
