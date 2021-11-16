@@ -12,7 +12,6 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
     private static final Scanner scanner = new Scanner(System.in); // Create scanner object from Scanner Class
     private static ArrayList<Formula1Driver> driver = new ArrayList<>(); // Empty ArrayList declared for store Formula1Driver class
     private static List<String> teamNameList = new ArrayList<>(); // Empty ArrayList declared for store F1 Team Names
-    private static List<String> raceDates = new ArrayList<>(); // Empty Arraylist declared for store Previous Race Dates
     private final ArrayList<Integer> positionList = new ArrayList<>(); // Empty ArrayList declared for store Race positions assigned to drivers
     private static ArrayList<RaceData> races = new ArrayList<>(); // Empty Arraylist declared for store RaceData Class
 
@@ -166,9 +165,6 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                     break;
                 }
                 teamNameList.add(driver.get(index).getTeamName()); // add team name of the selected driver
-                for (RaceData race : races) {
-                    race.removeDriverAndStats(driver.get(index).driverName);
-                }
                 driver.remove(index); // Remove driver from arraylist
                 System.out.println("Driver and Team Successfully Deleted.");
                 do { // Exit validation
@@ -336,7 +332,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                     dateString = scanner.next();
                     isValidDate = DateValidator(dateString, season);
                     if (isValidDate) { // if valid check for previous entries
-                        isPreviousRace = raceDates.contains(dateString);
+                        isPreviousRace = races.contains(dateString);
                         if (isPreviousRace) {
                             System.out.println("Race Already Added! Try Again.");
                         }
@@ -349,7 +345,6 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                     }
                 } while (dateString.length() != 10 || !isValidDate || isPreviousRace);
 
-                raceDates.add(dateString); // store race date in raceDate arraylist
                 races.add(new RaceData(dateString));
 
                 for (Formula1Driver formula1Driver : driver) { // Invoke RaceDataUpdater for each driver
@@ -393,7 +388,6 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
             // Save all lists as objects on save file
             saveFile.writeObject(teamNameList);
             saveFile.writeObject(driver);
-            saveFile.writeObject(raceDates);
             saveFile.writeObject(races);
 
 //            System.out.println("File Saved Successfully!");
@@ -423,7 +417,6 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                 // Empty All the Lists before load save file
                 driver.clear();
                 teamNameList.clear();
-                raceDates.clear();
 
                 // Read Saved Objects from file
                 Object list1 = savedFile.readObject();
@@ -432,9 +425,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                 Object list2 = savedFile.readObject();
                 driver = CastArrayList(list2);
                 Object list3 = savedFile.readObject();
-                raceDates = CastList(list3);
-                Object list4 = savedFile.readObject();
-                races = CastRaceDataArrayList(list4);
+                races = CastRaceDataArrayList(list3);
             }
         } catch (Exception e) {
             System.out.println("Oops! Something went Wrong while loading Save File.");
@@ -776,12 +767,12 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      * This Method Prints Previous Added Race Dates
      */
     private void DisplayOldRaceDates() {
-        if (!raceDates.isEmpty()) { // Print Previous Race Dates in table
+        if (!races.isEmpty()) { // Print Previous Race Dates in table
             String tableData = "║     %-10s      ║%n";
             System.out.format("╔═════════════════════╗%n")
                     .format("║ Previous Race Dates ║%n")
                     .format("╔═════════════════════╗%n");
-            for (String raceDate : raceDates) {
+            for (RaceData raceDate : races) {
                 System.out.format(tableData, raceDate);
             }
             System.out.format("╚═════════════════════╝%n");
@@ -813,6 +804,6 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      * This Method Run GUI Part of the Programme
      */
     private void RunGUI() {
-        SwingUtilities.invokeLater(() -> new GUI_APP(driver, races, raceDates));
+        SwingUtilities.invokeLater(() -> new GUI_APP(driver, races));
     }
 }
