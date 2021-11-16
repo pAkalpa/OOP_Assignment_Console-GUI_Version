@@ -1,16 +1,23 @@
 import java.io.Serializable;
 
 public class Formula1Driver extends Driver implements Serializable, Comparable<Formula1Driver> {
+    int firstPositionCount; // First Position Count Storing Field
+    int secondPositionCount; // Second Position Count Storing Field
+    int thirdPositionCount; // Third Position Count Storing Field
+    int raceCount; // Race Count storing Field
+    float currentPoints; // Driver Points Storing Field
+
     /**
      * Formula1Driver Class Constructor
-     * @param driverName - Driver Name String
-     * @param driverLocation - Driver Location String
-     * @param teamName - Team Name String
-     * @param firstPositionCount - First Position Count integer
+     *
+     * @param driverName          - Driver Name String
+     * @param driverLocation      - Driver Location String
+     * @param teamName            - Team Name String
+     * @param firstPositionCount  - First Position Count integer
      * @param secondPositionCount - Second Position Count integer
-     * @param thirdPositionCount - Third Position Count integer
-     * @param raceCount - Race count integer
-     * @param currentPoints - Driver's Current Points float
+     * @param thirdPositionCount  - Third Position Count integer
+     * @param raceCount           - Race count integer
+     * @param currentPoints       - Driver's Current Points float
      */
     public Formula1Driver(String driverName, String driverLocation, String teamName, int firstPositionCount, int secondPositionCount, int thirdPositionCount, int raceCount, float currentPoints) {
         this.driverName = driverName;
@@ -25,6 +32,7 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
 
     /**
      * This Method Return Driver's Current Points
+     *
      * @return - Current Point float
      */
     public float getCurrentPoints() {
@@ -33,6 +41,7 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
 
     /**
      * This Method Return Driver's First Position Count
+     *
      * @return - First Position Count
      */
     public int getFirstPositionCount() {
@@ -41,6 +50,7 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
 
     /**
      * This Method Return Driver's Second Position Count
+     *
      * @return - Second Position Count
      */
     public int getSecondPositionCount() {
@@ -49,6 +59,7 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
 
     /**
      * This Method Return Driver's Third Position Count
+     *
      * @return - Third Position Count
      */
     public int getThirdPositionCount() {
@@ -57,6 +68,7 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
 
     /**
      * This Method Increment First Position Count by 1
+     *
      * @param firstPositionCount - Integer Value always 1
      */
     public void setFirstPositionCount(int firstPositionCount) {
@@ -65,6 +77,7 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
 
     /**
      * This Method Increment Second Positions Count by 1
+     *
      * @param secondPositionCount - Integer Value always 1
      */
     public void setSecondPositionCount(int secondPositionCount) {
@@ -73,6 +86,7 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
 
     /**
      * This Method Increment Third Position Count by 1
+     *
      * @param thirdPositionCount - Integer Value always 1
      */
     public void setThirdPositionCount(int thirdPositionCount) {
@@ -81,6 +95,7 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
 
     /**
      * This Method Increment Race Count by 1
+     *
      * @param raceCount - Integer Value always 1
      */
     public void setRaceCount(int raceCount) {
@@ -89,6 +104,7 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
 
     /**
      * This Method Adds Newly Calculated Points
+     *
      * @param currentPoints - Integer Value changes according to position Driver take in race
      */
     public void setCurrentPoints(float currentPoints) {
@@ -97,6 +113,7 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
 
     /**
      * This Overridden Method compare Points and First Position Count
+     *
      * @param temp - Formula1Driver Object
      * @return - Integer Value
      */
@@ -110,40 +127,8 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
     }
 
     /**
-     * This Method Return Driver Name String
-     * @return - Driver Name String
+     * This Method Print Driver Details as a Table
      */
-    public String getDriverName() {
-        return driverName;
-    }
-
-    /**
-     * This Method Return Driver Location String
-     * @return - Driver Location String
-     */
-    public String getDriverLocation() {
-        return driverLocation;
-    }
-
-    /**
-     * This Method Return Team Name String
-     * @return - Team Name String
-     */
-    public String getTeamName() {
-        return teamName;
-    }
-
-    /**
-     * This Method Set Team Name
-     * @param teamName - New Team Name String
-     */
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
-    }
-
-        /**
-         * This Method Print Driver Details as a Table
-         */
     public void PrintDriverTable() {
         int podiumCount = firstPositionCount + secondPositionCount + thirdPositionCount; // Sum of first three positions
         // Format of Each Data in the table
