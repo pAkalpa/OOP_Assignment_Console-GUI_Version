@@ -36,17 +36,8 @@ public class RaceData implements Serializable {
         return driverStartPositions;
     }
 
-    public void removeDriverAndStats(String driverName) {
-        if (driverNames.contains(driverName)) {
-            int index = 0;
-            for (String name : driverNames) {
-                if (name.equals(driverName)) {
-                    index = driverNames.indexOf(name);
-                }
-            }
-            driverNames.remove(index);
-            driverPositions.remove(index);
-//            driverStartPositions.remove(index);
-        }
+    @Override
+    public String toString() {
+        return raceDate;
     }
 }
