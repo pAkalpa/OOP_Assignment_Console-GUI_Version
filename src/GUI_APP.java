@@ -9,9 +9,8 @@ import java.util.Calendar;
 import java.util.List;
 
 public class GUI_APP extends JFrame implements ActionListener {
-    private final ArrayList<Formula1Driver> driver;
-    private final ArrayList<RaceData> races;
-    private final List<String> raceDates;
+    private ArrayList<Formula1Driver> driver;
+    private ArrayList<RaceData> races;
     private static final List<String> foundDate = new ArrayList<>();
     private static final List<Integer> foundFinishedPositions = new ArrayList<>();
 //    private static final List<Integer> foundStartPositions = new ArrayList<>();
@@ -40,6 +39,9 @@ public class GUI_APP extends JFrame implements ActionListener {
     ImageIcon randomIcon = new ImageIcon("src/assets/random-xs.png");
     ImageIcon searchIcon = new ImageIcon("src/assets/search-xs.png");
     ImageIcon notFoundIcon = new ImageIcon("src/assets/not-found-sm.png");
+    ImageIcon binIcon = new ImageIcon("src/assets/bin-sm.png");
+    ImageIcon emptyIcon = new ImageIcon("src/assets/error-sm.png");
+    ImageIcon infoIcon = new ImageIcon("src/assets/info-sm.png");
 
 
     /**
@@ -48,10 +50,9 @@ public class GUI_APP extends JFrame implements ActionListener {
      * @param driver - driver ArrayList
      * @param races  - races ArrayList
      */
-    public GUI_APP(ArrayList<Formula1Driver> driver, ArrayList<RaceData> races, List<String> raceDates) {
+    public GUI_APP(ArrayList<Formula1Driver> driver, ArrayList<RaceData> races) {
         this.driver = driver;
         this.races = races;
-        this.raceDates = raceDates;
 
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
         tabbedPane.addTab("Driver Table", driverIcon, driverTablePane());
@@ -106,7 +107,7 @@ public class GUI_APP extends JFrame implements ActionListener {
         panel.add(toolBar);
         panel.add(topDriverTableRenderer());
         panel.add(midBar);
-//        panel.add(bottomDriverTableRenderer());
+        panel.add(bottomDriverTableRenderer());
 
         return panel;
     }
@@ -202,7 +203,7 @@ public class GUI_APP extends JFrame implements ActionListener {
     }
 
     private JScrollPane bottomDriverTableRenderer() {
-        String[] header = {};
+        String[] header = {"Pos", "Driver Name", "Nationality", "Team/Constructor", "First Pos Count", "Second Pos Count", "Third Pos Count", "Pts"};
 
         bottomTableModel = new DefaultTableModel(header, 0);
         JTable driverTableBottom = new JTable(bottomTableModel);
@@ -211,7 +212,7 @@ public class GUI_APP extends JFrame implements ActionListener {
 
         bottomTableBody();
 
-//        driverTableBottom.setPreferredScrollableViewportSize(new Dimension(950, 100));
+        driverTableBottom.setPreferredScrollableViewportSize(new Dimension(950, 100));
 //        driverTableBottom.setFillsViewportHeight(true);
         driverTableBottom.setEnabled(false);
         driverTableBottom.setDefaultRenderer(Object.class, cellRenderer);
@@ -254,7 +255,7 @@ public class GUI_APP extends JFrame implements ActionListener {
                 foundDate.clear();
                 foundFinishedPositions.clear();
 //            foundStartPositions.clear();
-                searchText.setText("");
+//                searchText.setText("");
             }
         } else if (e.getSource() == sortRaceButton) {
             sortTableModel.setRowCount(0);
@@ -264,32 +265,44 @@ public class GUI_APP extends JFrame implements ActionListener {
     }
 
     private void generateRandomRace() {
-        if (driver.size() != 0) {
-            Formula1ChampionshipManager f1cm = new Formula1ChampionshipManager();
-            ArrayList<Integer> positionList = new ArrayList<>();
-            boolean validDate;
-            boolean containDate;
-            String dateString;
-            int randomNumber;
-            do {
-                String year = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
-                String month = randomNumberGenerator(12);
-                String day = randomNumberGenerator(31);
-                dateString = year + "/" + month + "/" + day;
-                validDate = f1cm.DateValidator(dateString, Integer.parseInt(year));
-                containDate = raceDates.contains(dateString);
-            } while (containDate && (!validDate));
-            raceDates.add(dateString);
-            races.add(new RaceData(dateString));
-            for (Formula1Driver formula1Driver : driver) {
+        ArrayList<String> names = new ArrayList<>();
+        ArrayList<Integer> positions = new ArrayList<>();
+        if (races.size() <= 30) {
+            if (driver.size() != 0) {
+                Formula1ChampionshipManager f1cm = new Formula1ChampionshipManager();
+                ArrayList<Integer> positionList = new ArrayList<>();
+                boolean validDate;
+                boolean containDate;
+                String dateString;
+                int randomNumber;
                 do {
-                    randomNumber = Integer.parseInt(randomNumberGenerator(25));
-                } while (positionList.contains(randomNumber));
-                positionList.add(randomNumber);
-                addPoints(randomNumber, formula1Driver, dateString);
-                formula1Driver.setRaceCount(1);
+                    String year = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
+                    String month = randomNumberGenerator(12);
+                    String day = randomNumberGenerator(31);
+                    dateString = year + "/" + month + "/" + day;
+                    validDate = f1cm.DateValidator(dateString, Integer.parseInt(year));
+                    containDate = races.contains(dateString);
+                } while (containDate && (!validDate));
+                races.add(new RaceData(dateString));
+                for (Formula1Driver formula1Driver : driver) {
+                    do {
+                        randomNumber = Integer.parseInt(randomNumberGenerator(25));
+                    } while (positionList.contains(randomNumber));
+                    positionList.add(randomNumber);
+                    addPoints(randomNumber, formula1Driver, dateString);
+                    names.add(formula1Driver.getDriverName());
+                    positions.add(randomNumber);
+                    formula1Driver.setRaceCount(1);
+                }
+                generatedInfoDialog(dateString, names, positions);
+                names.clear();
+                positions.clear();
+                positionList.clear();
+            } else {
+                emptyDriverDialog();
             }
-            positionList.clear();
+        } else {
+            maxRacesDialog();
         }
     }
 
@@ -322,7 +335,19 @@ public class GUI_APP extends JFrame implements ActionListener {
     }
 
     private void bottomTableBody() {
+        for (Formula1Driver formula1Driver : driver) {
+            int position = driver.indexOf(formula1Driver) + 1;
+            String driverName = formula1Driver.getDriverName();
+            String driverLocation = formula1Driver.getDriverLocation();
+            String teamName = formula1Driver.getTeamName();
+            int fps = formula1Driver.getFirstPositionCount();
+            int spc = formula1Driver.getSecondPositionCount();
+            int tpc = formula1Driver.getThirdPositionCount();
+            float pts = formula1Driver.getCurrentPoints();
 
+            Object[] tableData = {position, driverName, driverLocation, teamName, fps, spc, tpc, pts};
+            bottomTableModel.addRow(tableData);
+        }
     }
 
     private void sortTableBody() {
@@ -357,5 +382,27 @@ public class GUI_APP extends JFrame implements ActionListener {
                 }
             }
         }
+    }
+
+    private void maxRacesDialog() {
+        Object[] option = {"Continue" , "Delete"};
+        int n = JOptionPane.showOptionDialog(this, "Maximum(30) Races added for this Season.  \nPress Delete to Clear Previous Race Date's! or Press Continue for Keep Data.      \n\n", "Maximum Races Added!", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, binIcon, option, option[0]);
+        if (n == 1) {
+            races.clear();
+        }
+    }
+
+    private void emptyDriverDialog() {
+        JOptionPane.showMessageDialog(this, "Driver List is Empty!\nTry To add Driver's using Console Menu.", "Driver's Not Found!", JOptionPane.INFORMATION_MESSAGE, emptyIcon);
+    }
+
+    private void generatedInfoDialog(String date, ArrayList<String> names, ArrayList<Integer> position) {
+        String messageTop = "Race Date : " + date + "\n";
+        StringBuilder messageMid = new StringBuilder();
+        for (int i = 0; i < names.size(); i++) {
+            messageMid.append(names.get(i)).append(" - ").append(position.get(i)).append("\n");
+        }
+        String fullMessage = messageTop + messageMid;
+        JOptionPane.showMessageDialog(this, fullMessage, "Generated Race Info", JOptionPane.INFORMATION_MESSAGE, infoIcon);
     }
 }
