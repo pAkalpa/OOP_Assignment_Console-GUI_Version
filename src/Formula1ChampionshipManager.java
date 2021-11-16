@@ -59,11 +59,6 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                 mainMenuInputValidation(code); // Invoke menuInputValidation method and parse code as argument
             }
         }
-        for (RaceData race : races) {
-            System.out.println(race.getRaceDate());
-            System.out.println(race.getDriverNames());
-            System.out.println(race.getDriverPositions());
-        }
         System.out.println("Exiting Program...");
     }
 
@@ -171,6 +166,9 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                     break;
                 }
                 teamNameList.add(driver.get(index).getTeamName()); // add team name of the selected driver
+                for (RaceData race : races) {
+                    race.removeDriverAndStats(driver.get(index).driverName);
+                }
                 driver.remove(index); // Remove driver from arraylist
                 System.out.println("Driver and Team Successfully Deleted.");
                 do { // Exit validation
@@ -336,8 +334,8 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                     int season = Calendar.getInstance().get(Calendar.YEAR);
                     System.out.print("\nEnter Date of the Race for Season " + season + " yyyy/MM/dd(Ex " + season + "/02/23): ");
                     dateString = scanner.next();
-                    isValidDate = DateValidator(dateString,season);
-                    if (isValid) { // if valid check for previous entries
+                    isValidDate = DateValidator(dateString, season);
+                    if (isValidDate) { // if valid check for previous entries
                         isPreviousRace = raceDates.contains(dateString);
                         if (isPreviousRace) {
                             System.out.println("Race Already Added! Try Again.");
@@ -631,9 +629,21 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
             }
         } while (racePosition < 1 || racePosition > 22 || positionList.contains(racePosition));
 
+        AddDriverPoints(formula1Driver, date, racePosition, races);
+    }
+
+    /**
+     * This Method Adds Driver Name and Finish Position to Race Data Array
+     *
+     * @param formula1Driver - Arraylist
+     * @param date           - Date as a String
+     * @param racePosition   - Finish Position as Integer
+     * @param races          - ArrayList
+     */
+    static void AddDriverPoints(Formula1Driver formula1Driver, String date, int racePosition, ArrayList<RaceData> races) {
         for (RaceData race : races) {
             if (race.getRaceDate().equals(date)) {
-                race.setDriverNameAndPosition(formula1Driver.getDriverName(),racePosition);
+                race.setDriverNameAndPosition(formula1Driver.getDriverName(), racePosition);
             }
         }
 
@@ -664,10 +674,10 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      * This Method Validates the Date
      *
      * @param dateString - User Input Date as String
-     * @param season - This Season/Year as Integer
+     * @param season     - This Season/Year as Integer
      * @return - inputted date validation
      */
-    private boolean DateValidator(String dateString, int season) {
+    public boolean DateValidator(String dateString, int season) {
         String validDateFormat = "yyyy/MM/dd"; // Valid date format
         try {
             DateFormat dateFormat = new SimpleDateFormat(validDateFormat);
@@ -803,6 +813,6 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      * This Method Run GUI Part of the Programme
      */
     private void RunGUI() {
-        SwingUtilities.invokeLater(() -> new GUI_APP(driver, races, teamNameList));
+        SwingUtilities.invokeLater(() -> new GUI_APP(driver, races, teamNameList, raceDates));
     }
 }
