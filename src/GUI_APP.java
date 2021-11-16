@@ -9,58 +9,68 @@ import java.util.Calendar;
 import java.util.List;
 
 public class GUI_APP extends JFrame implements ActionListener {
-    private ArrayList<Formula1Driver> driver;
-    private ArrayList<RaceData> races;
-    private List<String> teamNameList;
-    private List<String> raceDates;
-    private static List<String> foundDate = new ArrayList<>();
-    private static List<Integer> foundFinishedPositions = new ArrayList<>();
-    private static List<Integer> foundStartPositions = new ArrayList<>();
+    private final ArrayList<Formula1Driver> driver;
+    private final ArrayList<RaceData> races;
+    private final List<String> raceDates;
+    private static final List<String> foundDate = new ArrayList<>();
+    private static final List<Integer> foundFinishedPositions = new ArrayList<>();
+//    private static final List<Integer> foundStartPositions = new ArrayList<>();
 
     /*--------------------- UI Components ---------------------*/
-    private JToolBar toolBar = new JToolBar();
-    private JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-    private JButton sortPointDes = new JButton("Sort by Point (Descending)");
-    private JButton sortPointAsc = new JButton("Sort by Point (Ascending)");
-    private JButton sortFirstDes = new JButton("Sort by First Positions (Descending)");
-    private JButton generateRace = new JButton("Generate Race Randomly");
-    private JButton generateRaceWithPos = new JButton("Generate Race Randomly(With Positions)");
-    private JButton searchButton = new JButton("Search");
-    private JButton sortRaceButton = new JButton("Sort Race Date(Ascending)");
-    private JTextField searchText = new JTextField(20);
-    private JTable driverTableTop;
-    private JTable driverTableBottom;
-    private JTable sortTable;
-    private JTable searchTable;
-    private DefaultTableModel tableModel;
+    private final JToolBar toolBar = new JToolBar();
+    private final JButton sortPointDes = new JButton("Sort by Point (Descending)");
+    private final JButton sortPointAsc = new JButton("Sort by Point (Ascending)");
+    private final JButton sortFirstDes = new JButton("Sort by First Positions (Descending)");
+    private final JButton generateRace = new JButton("Generate Race Randomly");
+    private final JButton generateRaceWithPos = new JButton("Generate Race Randomly(With Positions)");
+    private final JButton searchButton = new JButton("Search");
+    private final JButton sortRaceButton = new JButton("Sort Race Date(Ascending)");
+    private final JTextField searchText = new JTextField(20);
+    private DefaultTableModel topTableModel;
+    private DefaultTableModel bottomTableModel;
     private DefaultTableModel sortTableModel;
     private DefaultTableModel searchTableModel;
+
+    /*-------------------- Assets ---------------------------*/
+    ImageIcon frameIcon = new ImageIcon("src/assets/icon.png");
+    ImageIcon driverIcon = new ImageIcon("src/assets/driver.png");
+    ImageIcon raceDateIcon = new ImageIcon("src/assets/race-track.png");
+    ImageIcon descendingImg = new ImageIcon("src/assets/sort-descending-xs.png");
+    ImageIcon ascendingImg = new ImageIcon("src/assets/sort-ascending-xs.png");
+    ImageIcon randomIcon = new ImageIcon("src/assets/random-xs.png");
+    ImageIcon searchIcon = new ImageIcon("src/assets/search-xs.png");
+    ImageIcon notFoundIcon = new ImageIcon("src/assets/not-found-sm.png");
 
 
     /**
      * Main Constructor Of the GUI
      *
-     * @param driver       - driver ArrayList
-     * @param teamNameList - teamNameList String List
-     * @param races        - races ArrayList
+     * @param driver - driver ArrayList
+     * @param races  - races ArrayList
      */
-    public GUI_APP(ArrayList<Formula1Driver> driver, ArrayList<RaceData> races, List<String> teamNameList, List<String> raceDates) {
+    public GUI_APP(ArrayList<Formula1Driver> driver, ArrayList<RaceData> races, List<String> raceDates) {
         this.driver = driver;
         this.races = races;
-        this.teamNameList = teamNameList;
         this.raceDates = raceDates;
 
-        tabbedPane.addTab("Driver Table", driverTablePane());
-        tabbedPane.addTab("Race Table", raceTablePane());
+        JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+        tabbedPane.addTab("Driver Table", driverIcon, driverTablePane());
+        tabbedPane.addTab("Race Table", raceDateIcon, raceTablePane());
         getContentPane().add(tabbedPane);
 
         sortPointDes.addActionListener(this);
+        sortPointDes.setIcon(descendingImg);
         sortPointAsc.addActionListener(this);
+        sortPointAsc.setIcon(ascendingImg);
         sortFirstDes.addActionListener(this);
+        sortFirstDes.setIcon(descendingImg);
         generateRace.addActionListener(this);
+        generateRace.setIcon(randomIcon);
         generateRaceWithPos.addActionListener(this);
         searchButton.addActionListener(this);
+        searchButton.setIcon(searchIcon);
         sortRaceButton.addActionListener(this);
+        sortRaceButton.setIcon(ascendingImg);
 
         setTitle("F1 Championship Manager");
         setSize(1000, 600);
@@ -70,6 +80,7 @@ public class GUI_APP extends JFrame implements ActionListener {
         setAlwaysOnTop(true);
         setVisible(true);
         setLocationRelativeTo(null);
+        setIconImage(frameIcon.getImage());
     }
 
     private JPanel driverTablePane() {
@@ -86,6 +97,7 @@ public class GUI_APP extends JFrame implements ActionListener {
         toolBar.add(generateRace);
         toolBar.addSeparator();
         toolBar.setFloatable(false);
+        toolBar.setRollover(true);
 
         JToolBar midBar = new JToolBar();
         midBar.setFloatable(false);
@@ -101,22 +113,36 @@ public class GUI_APP extends JFrame implements ActionListener {
 
     private JPanel raceTablePane() {
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(2,2,0,5));
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints gc = new GridBagConstraints();
 
         JToolBar searchToolBar = new JToolBar();
-        JToolBar sortToolBar = new JToolBar();
         searchToolBar.setFloatable(false);
-        sortToolBar.setFloatable(false);
 
         searchToolBar.add(searchText);
         searchToolBar.add(searchButton);
 
-        sortToolBar.add(sortRaceButton);
+        gc.gridx = 0;
+        gc.gridy = 0;
+        gc.fill = GridBagConstraints.HORIZONTAL;
+        gc.anchor = GridBagConstraints.PAGE_START;
+        panel.add(searchToolBar, gc);
 
-        panel.add(searchToolBar);
-        panel.add(sortToolBar);
-        panel.add(searchTableRenderer());
-        panel.add(sortTableRenderer());
+        gc.gridx = 1;
+        gc.gridy = 0;
+        gc.fill = GridBagConstraints.NONE;
+        gc.anchor = GridBagConstraints.PAGE_START;
+        panel.add(sortRaceButton, gc);
+
+        gc.gridx = 0;
+        gc.gridy = 1;
+        gc.anchor = GridBagConstraints.CENTER;
+        panel.add(searchTableRenderer(), gc);
+
+        gc.gridx = 1;
+        gc.gridy = 1;
+        gc.anchor = GridBagConstraints.CENTER;
+        panel.add(sortTableRenderer(), gc);
 
         return panel;
     }
@@ -124,111 +150,112 @@ public class GUI_APP extends JFrame implements ActionListener {
     private JScrollPane sortTableRenderer() {
         String[] header = {"Race Date", "No of Participants"};
         sortTableModel = new DefaultTableModel(header, 0);
-        sortTable = new JTable(sortTableModel);
-        DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
-        dtcr.setHorizontalAlignment(SwingConstants.CENTER);
+        JTable sortTable = new JTable(sortTableModel);
+        DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+        cellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
         sortTableBody();
 
-//        sortTable.setPreferredScrollableViewportSize(new Dimension(950, 100));
-//        sortTable.setFillsViewportHeight(true);
         sortTable.setEnabled(false);
-        sortTable.setDefaultRenderer(Object.class, dtcr);
+        sortTable.setDefaultRenderer(Object.class, cellRenderer);
         sortTable.getTableHeader().setReorderingAllowed(false);
         sortTable.getTableHeader().setResizingAllowed(false);
 
-        JScrollPane scrollPane = new JScrollPane(sortTable);
-        return scrollPane;
+        return new JScrollPane(sortTable);
     }
 
     private JScrollPane searchTableRenderer() {
-        String[] header = { "Race Date", "Finish Position" };
+        String[] header = {"Race Date", "Finish Position"};
         searchTableModel = new DefaultTableModel(header, 0);
-        searchTable = new JTable(searchTableModel);
-        DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
-        dtcr.setHorizontalAlignment(SwingConstants.CENTER);
-
+        JTable searchTable = new JTable(searchTableModel);
+        DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+        cellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
         searchTableBody();
-//        searchTable.setPreferredScrollableViewportSize(new Dimension(950, 100));
-//        searchTable.setFillsViewportHeight(true);
+
         searchTable.setEnabled(false);
-        searchTable.setDefaultRenderer(Object.class, dtcr);
+        searchTable.setDefaultRenderer(Object.class, cellRenderer);
         searchTable.getTableHeader().setReorderingAllowed(false);
         searchTable.getTableHeader().setResizingAllowed(false);
 
-        JScrollPane scrollPane = new JScrollPane(searchTable);
-        return  scrollPane;
+        return new JScrollPane(searchTable);
     }
 
     private JScrollPane topDriverTableRenderer() {
         String[] header = {"Pos", "Driver Name", "Nationality", "Team/Constructor", "First Pos Count", "Second Pos Count", "Third Pos Count", "Pts"};
 
-        tableModel = new DefaultTableModel(header, 0);
-        driverTableTop = new JTable(tableModel);
-        DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
-        dtcr.setHorizontalAlignment(SwingConstants.CENTER);
+        topTableModel = new DefaultTableModel(header, 0);
+        JTable driverTableTop = new JTable(topTableModel);
+        DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+        cellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
-        tableBody();
+        topTableBody();
 
         driverTableTop.setPreferredScrollableViewportSize(new Dimension(950, 100));
 //        driverTableTop.setFillsViewportHeight(true);
         driverTableTop.setEnabled(false);
-        driverTableTop.setDefaultRenderer(Object.class, dtcr);
+        driverTableTop.setDefaultRenderer(Object.class, cellRenderer);
         driverTableTop.getTableHeader().setReorderingAllowed(false);
         driverTableTop.getTableHeader().setResizingAllowed(false);
 
-        JScrollPane scrollPane = new JScrollPane(driverTableTop);
-        return scrollPane;
+        return new JScrollPane(driverTableTop);
     }
 
     private JScrollPane bottomDriverTableRenderer() {
-        String[] header = {"Pos", "Driver Name", "Nationality", "Team/Constructor", "First Pos Count", "Second Pos Count", "Third Pos Count", "Pts"};
+        String[] header = {};
 
-        tableModel = new DefaultTableModel(header, 0);
-        driverTableBottom = new JTable(tableModel);
-        DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
-        dtcr.setHorizontalAlignment(SwingConstants.CENTER);
+        bottomTableModel = new DefaultTableModel(header, 0);
+        JTable driverTableBottom = new JTable(bottomTableModel);
+        DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+        cellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
-        driverTableBottom.setPreferredScrollableViewportSize(new Dimension(950, 100));
-        driverTableBottom.setFillsViewportHeight(true);
+        bottomTableBody();
+
+//        driverTableBottom.setPreferredScrollableViewportSize(new Dimension(950, 100));
+//        driverTableBottom.setFillsViewportHeight(true);
         driverTableBottom.setEnabled(false);
-        driverTableBottom.setDefaultRenderer(Object.class, dtcr);
+        driverTableBottom.setDefaultRenderer(Object.class, cellRenderer);
         driverTableBottom.getTableHeader().setReorderingAllowed(false);
         driverTableBottom.getTableHeader().setResizingAllowed(false);
 
-        JScrollPane scrollPane = new JScrollPane(driverTableBottom);
-        return scrollPane;
+        return new JScrollPane(driverTableBottom);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == sortPointDes) {
-            tableModel.setRowCount(0);
+            topTableModel.setRowCount(0);
             driver.sort(new SortByPoints());
-            tableBody();
+            topTableBody();
         } else if (e.getSource() == sortPointAsc) {
-            tableModel.setRowCount(0);
+            topTableModel.setRowCount(0);
             driver.sort(new SortByPoints().reversed());
-            tableBody();
+            topTableBody();
         } else if (e.getSource() == sortFirstDes) {
-            tableModel.setRowCount(0);
+            topTableModel.setRowCount(0);
             driver.sort(new SortByFPS());
-            tableBody();
+            topTableBody();
         } else if (e.getSource() == generateRace) {
-            tableModel.setRowCount(0);
+            topTableModel.setRowCount(0);
             generateRandomRace();
-            tableBody();
+            topTableBody();
         } else if (e.getSource() == generateRaceWithPos) {
-
+            bottomTableModel.setRowCount(0);
+            bottomTableBody();
         } else if (e.getSource() == searchButton) {
             String keyword = searchText.getText();
-            searchArrayLists(keyword);
-            searchTableModel.setRowCount(0);
-            searchTableBody();
-            foundDate.clear();
-            foundFinishedPositions.clear();
-            foundStartPositions.clear();
+            if (keyword.length() != 0) {
+                searchArrayLists(keyword);
+                searchTableModel.setRowCount(0);
+                searchTableBody();
+                if (foundDate.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "No exact matches found!", "Not Found!", JOptionPane.INFORMATION_MESSAGE, notFoundIcon);
+                }
+                foundDate.clear();
+                foundFinishedPositions.clear();
+//            foundStartPositions.clear();
+                searchText.setText("");
+            }
         } else if (e.getSource() == sortRaceButton) {
             sortTableModel.setRowCount(0);
             races.sort(new SortByDate());
@@ -246,28 +273,28 @@ public class GUI_APP extends JFrame implements ActionListener {
             int randomNumber;
             do {
                 String year = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
-                String month = randomNumberGenerator(1,12);
-                String day = randomNumberGenerator(1,31);
+                String month = randomNumberGenerator(12);
+                String day = randomNumberGenerator(31);
                 dateString = year + "/" + month + "/" + day;
                 validDate = f1cm.DateValidator(dateString, Integer.parseInt(year));
                 containDate = raceDates.contains(dateString);
-            } while (containDate&&(!validDate));
+            } while (containDate && (!validDate));
             raceDates.add(dateString);
             races.add(new RaceData(dateString));
             for (Formula1Driver formula1Driver : driver) {
                 do {
-                    randomNumber = Integer.parseInt(randomNumberGenerator(1,25));
+                    randomNumber = Integer.parseInt(randomNumberGenerator(25));
                 } while (positionList.contains(randomNumber));
                 positionList.add(randomNumber);
-                addPoints(randomNumber,formula1Driver,dateString);
+                addPoints(randomNumber, formula1Driver, dateString);
                 formula1Driver.setRaceCount(1);
             }
             positionList.clear();
         }
     }
 
-    private String randomNumberGenerator(int min, int max) {
-        String randomNumber = String.valueOf((int) (Math.random() * (max - min + 1) + min));
+    private String randomNumberGenerator(int max) {
+        String randomNumber = String.valueOf((int) (Math.random() * (max - 1 + 1) + 1));
         if (randomNumber.length() == 1) {
             randomNumber = "0" + randomNumber;
         }
@@ -278,7 +305,7 @@ public class GUI_APP extends JFrame implements ActionListener {
         Formula1ChampionshipManager.AddDriverPoints(formula1Driver, dateString, position, races);
     }
 
-    private void tableBody() {
+    private void topTableBody() {
         for (Formula1Driver formula1Driver : driver) {
             int position = driver.indexOf(formula1Driver) + 1;
             String driverName = formula1Driver.getDriverName();
@@ -290,8 +317,12 @@ public class GUI_APP extends JFrame implements ActionListener {
             float pts = formula1Driver.getCurrentPoints();
 
             Object[] tableData = {position, driverName, driverLocation, teamName, fps, spc, tpc, pts};
-            tableModel.addRow(tableData);
+            topTableModel.addRow(tableData);
         }
+    }
+
+    private void bottomTableBody() {
+
     }
 
     private void sortTableBody() {
