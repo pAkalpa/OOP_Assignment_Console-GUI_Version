@@ -813,6 +813,6 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      * This Method Run GUI Part of the Programme
      */
     private void RunGUI() {
-        SwingUtilities.invokeLater(() -> new GUI_APP(driver, races, teamNameList, raceDates));
+        SwingUtilities.invokeLater(() -> new GUI_APP(driver, races, raceDates));
     }
 }
