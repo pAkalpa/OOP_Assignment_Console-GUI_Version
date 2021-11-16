@@ -1,10 +1,11 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class RaceData {
-    private String raceDate;
-    private ArrayList<String> driverNames = new ArrayList<>();
-    private ArrayList<Integer> driverPositions = new ArrayList<>();
-    private ArrayList<Integer> driverStartPositions = new ArrayList<>();
+public class RaceData implements Serializable {
+    private final String raceDate;
+    private final ArrayList<String> driverNames = new ArrayList<>();
+    private final ArrayList<Integer> driverPositions = new ArrayList<>();
+    private final ArrayList<Integer> driverStartPositions = new ArrayList<>();
 
     public RaceData(String raceDate) {
         this.raceDate = raceDate;
@@ -29,5 +30,23 @@ public class RaceData {
 
     public ArrayList<Integer> getDriverPositions() {
         return driverPositions;
+    }
+
+    public ArrayList<Integer> getDriverStartPositions() {
+        return driverStartPositions;
+    }
+
+    public void removeDriverAndStats(String driverName) {
+        if (driverNames.contains(driverName)) {
+            int index = 0;
+            for (String name : driverNames) {
+                if (name.equals(driverName)) {
+                    index = driverNames.indexOf(name);
+                }
+            }
+            driverNames.remove(index);
+            driverPositions.remove(index);
+//            driverStartPositions.remove(index);
+        }
     }
 }
