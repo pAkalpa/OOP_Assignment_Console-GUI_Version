@@ -67,6 +67,14 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
     }
 
     /**
+     * This Method Return Driver's Total Race Count
+     * @return - Race Count
+     */
+    public int getRaceCount() {
+        return raceCount;
+    }
+
+    /**
      * This Method Increment First Position Count by 1
      *
      * @param firstPositionCount - Integer Value always 1
