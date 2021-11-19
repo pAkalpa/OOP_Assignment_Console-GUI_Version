@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public class RaceData implements Serializable {
     private final String raceDate;
     private final ArrayList<String> driverNames = new ArrayList<>();
-    private final ArrayList<Integer> driverPositions = new ArrayList<>();
+    private final ArrayList<Integer> driverFinishPositions = new ArrayList<>();
     private final ArrayList<Integer> driverStartPositions = new ArrayList<>();
 
     public RaceData(String raceDate) {
@@ -13,7 +13,7 @@ public class RaceData implements Serializable {
 
     public void setDriverNameAndPosition(String driverName, int position) {
         driverNames.add(driverName);
-        driverPositions.add(position);
+        driverFinishPositions.add(position);
     }
 
     public void setStartPosition(int startPosition) {
@@ -28,8 +28,8 @@ public class RaceData implements Serializable {
         return driverNames;
     }
 
-    public ArrayList<Integer> getDriverPositions() {
-        return driverPositions;
+    public ArrayList<Integer> getDriverFinishPositions() {
+        return driverFinishPositions;
     }
 
     public ArrayList<Integer> getDriverStartPositions() {
