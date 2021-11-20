@@ -11,8 +11,8 @@ import java.util.List;
 import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
 
 public class GUI_APP extends JFrame implements ActionListener {
-    private static String dateAsString;
-    private static int winner;
+    private static String dateAsString; // date String
+    private static int winner; // Winner Start Position
     private final ArrayList<Formula1Driver> driver;
     private final ArrayList<RaceData> races;
     private static final ArrayList<String> names = new ArrayList<>();
@@ -67,6 +67,7 @@ public class GUI_APP extends JFrame implements ActionListener {
         tabbedPane.addTab("Race Table", raceDateIcon, raceTablePane());
         getContentPane().add(tabbedPane);
 
+        /*--------- Add Icons to Buttons ----------*/
         sortPointDes.addActionListener(this);
         sortPointDes.setIcon(descendingImg);
         sortPointAsc.addActionListener(this);
@@ -92,6 +93,11 @@ public class GUI_APP extends JFrame implements ActionListener {
         setIconImage(frameIcon.getImage());
     }
 
+    /**
+     * This Method Render Driver Table Toolbar
+     *
+     * @return - Driver Table Toolbar
+     */
     private JPanel driverTablePane() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -120,6 +126,11 @@ public class GUI_APP extends JFrame implements ActionListener {
         return panel;
     }
 
+    /**
+     * This Method Render Race Table Panel
+     *
+     * @return - Race Table Panel
+     */
     private JPanel raceTablePane() {
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
@@ -156,6 +167,11 @@ public class GUI_APP extends JFrame implements ActionListener {
         return panel;
     }
 
+    /**
+     * This Method Render Tables
+     *
+     * @return - JTable wrapped in JScroll Pane
+     */
     private JScrollPane sortTableRenderer() {
         String[] header = {"Race Date", "No of Participants"};
         sortTableModel = new DefaultTableModel(header, 0);
@@ -173,6 +189,11 @@ public class GUI_APP extends JFrame implements ActionListener {
         return new JScrollPane(sortTable);
     }
 
+    /**
+     * This Method Render Search Table
+     *
+     * @return - Search JTable wrapped in JScroll Pane
+     */
     private JScrollPane searchTableRenderer() {
         String[] header = {"Race Date", "Finish Position"};
         searchTableModel = new DefaultTableModel(header, 0);
@@ -190,6 +211,11 @@ public class GUI_APP extends JFrame implements ActionListener {
         return new JScrollPane(searchTable);
     }
 
+    /**
+     * This Method Render Top Driver Table
+     *
+     * @return - Top Driver Table
+     */
     private JScrollPane topDriverTableRenderer() {
         String[] header = {"Pos", "Driver Name", "Nationality", "Team/Constructor", "First Pos Count", "Second Pos Count", "Third Pos Count", "Total Races", "Pts"};
 
@@ -201,7 +227,6 @@ public class GUI_APP extends JFrame implements ActionListener {
         topTableBody();
 
         driverTableTop.setPreferredScrollableViewportSize(new Dimension(950, 100));
-//        driverTableTop.setFillsViewportHeight(true);
         driverTableTop.setEnabled(false);
         driverTableTop.setDefaultRenderer(Object.class, cellRenderer);
         driverTableTop.getTableHeader().setReorderingAllowed(false);
@@ -210,6 +235,11 @@ public class GUI_APP extends JFrame implements ActionListener {
         return new JScrollPane(driverTableTop);
     }
 
+    /**
+     * This Method Render Bottom Driver Table
+     *
+     * @return - Bottom Driver Table
+     */
     private JScrollPane bottomDriverTableRenderer() {
         String[] header = {"Pos", "Driver Name", "Nationality", "Team/Constructor", "First Pos Count", "Second Pos Count", "Third Pos Count", "Total Races", "Start Position", "Finish Position", "Pts"};
 
@@ -221,7 +251,6 @@ public class GUI_APP extends JFrame implements ActionListener {
         bottomTableBody();
 
         driverTableBottom.setPreferredScrollableViewportSize(new Dimension(950, 100));
-//        driverTableBottom.setFillsViewportHeight(true);
         driverTableBottom.setEnabled(false);
         driverTableBottom.setDefaultRenderer(Object.class, cellRenderer);
         driverTableBottom.getTableHeader().setReorderingAllowed(false);
@@ -230,6 +259,11 @@ public class GUI_APP extends JFrame implements ActionListener {
         return new JScrollPane(driverTableBottom);
     }
 
+    /**
+     * This Method Invokes functions according to user input
+     *
+     * @param e - Action Event
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == sortPointDes) {
@@ -311,6 +345,11 @@ public class GUI_APP extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * This Method Generates Random Races
+     *
+     * @param type - Type of Race with or Without Start Positions
+     */
     private void generateRandomRace(int type) {
         int max = 99;
         int min = 0;
@@ -383,11 +422,6 @@ public class GUI_APP extends JFrame implements ActionListener {
                 names.add(formula1Driver.getDriverName());
                 formula1Driver.setRaceCount(1);
                 startPositions.add(startNumber);
-                for (RaceData race : races) {
-                    if (race.getRaceDate().equals(dateString)) {
-                        race.setStartPosition(startNumber);
-                    }
-                }
             }
 
             for (Formula1Driver formula1Driver : driver) {
@@ -410,6 +444,12 @@ public class GUI_APP extends JFrame implements ActionListener {
         finishPositionList.clear();
     }
 
+    /**
+     * This Method Generates Random int numbers according to given range
+     *
+     * @param max - Maximum value of Range
+     * @return - Random int number
+     */
     private String randomNumberGenerator(int max) {
         String randomNumber = String.valueOf((int) (Math.random() * (max - 1 + 1) + 1));
         if (randomNumber.length() == 1) {
@@ -439,6 +479,9 @@ public class GUI_APP extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * This Method Render Bottom Table
+     */
     private void bottomTableBody() {
         for (Formula1Driver formula1Driver : driver) {
             int position = driver.indexOf(formula1Driver) + 1;
@@ -465,6 +508,9 @@ public class GUI_APP extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * This Method Render Sort Tables
+     */
     private void sortTableBody() {
         for (RaceData race : races) {
             String date = race.getRaceDate();
@@ -474,6 +520,9 @@ public class GUI_APP extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * This Method Render Search Table
+     */
     private void searchTableBody() {
         for (int i = 0; i < foundDate.size(); i++) {
             String date = foundDate.get(i);
@@ -484,6 +533,11 @@ public class GUI_APP extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * This Method Search and For given Driver Name
+     *
+     * @param keyword - Driver Name
+     */
     private void searchArrayLists(String keyword) {
         for (RaceData race : races) {
             ArrayList<String> names = race.getDriverNames();
@@ -497,6 +551,9 @@ public class GUI_APP extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * This Method Display Dialog Pane if maximum race(30) exceeded
+     */
     private void maxRacesDialog() {
         Object[] option = {"Continue", "Delete"};
         int n = JOptionPane.showOptionDialog(this, "Maximum(30) Races added for this Season.  \nPress Delete to Clear Previous Race Date's! or Press Continue for Keep Data.      \n\n", "Maximum Races Added!", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, binIcon, option, option[0]);
@@ -505,10 +562,18 @@ public class GUI_APP extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * This Method Display Dialog Pane if driver list size == 0
+     */
     private void emptyDriverDialog() {
         JOptionPane.showMessageDialog(this, "Driver List is Empty!\nTry To add Driver's using Console Menu.", "Driver's Not Found!", INFORMATION_MESSAGE, emptyIcon);
     }
 
+    /**
+     * This Method Shows Dialog pane with generated race data
+     *
+     * @param type - with or without start position and winner start position
+     */
     private void generatedInfoDialog(int type) {
         String messageTop = "Race Date : " + dateAsString + "\n";
         StringBuilder messageMid = new StringBuilder();
