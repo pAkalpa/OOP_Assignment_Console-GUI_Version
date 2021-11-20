@@ -8,17 +8,18 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
+
 public class GUI_APP extends JFrame implements ActionListener {
     private static String dateAsString;
     private static int winner;
-    private ArrayList<Formula1Driver> driver;
-    private ArrayList<RaceData> races;
-    private static ArrayList<String> names = new ArrayList<>();
-    private static ArrayList<Integer> finishPositions = new ArrayList<>();
-    private static ArrayList<Integer> startPositions = new ArrayList<>();
+    private final ArrayList<Formula1Driver> driver;
+    private final ArrayList<RaceData> races;
+    private static final ArrayList<String> names = new ArrayList<>();
+    private static final ArrayList<Integer> finishPositions = new ArrayList<>();
+    private static final ArrayList<Integer> startPositions = new ArrayList<>();
     private static final List<String> foundDate = new ArrayList<>();
     private static final List<Integer> foundFinishedPositions = new ArrayList<>();
-    private static final List<Integer> foundStartPositions = new ArrayList<>();
 
     /*--------------------- UI Components ---------------------*/
     private final JToolBar toolBar = new JToolBar();
@@ -232,22 +233,34 @@ public class GUI_APP extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == sortPointDes) {
-            topTableModel.setRowCount(0);
-            driver.sort(new SortByPoints());
-            topTableBody();
+            if (driver.size() != 0) {
+                topTableModel.setRowCount(0);
+                driver.sort(new SortByPoints());
+                topTableBody();
+            } else {
+                emptyDriverDialog();
+            }
         } else if (e.getSource() == sortPointAsc) {
-            topTableModel.setRowCount(0);
-            driver.sort(new SortByPoints().reversed());
-            topTableBody();
+            if (driver.size() != 0) {
+                topTableModel.setRowCount(0);
+                driver.sort(new SortByPoints().reversed());
+                topTableBody();
+            } else {
+                emptyDriverDialog();
+            }
         } else if (e.getSource() == sortFirstDes) {
-            topTableModel.setRowCount(0);
-            driver.sort(new SortByFPS());
-            topTableBody();
+            if (driver.size() != 0) {
+                topTableModel.setRowCount(0);
+                driver.sort(new SortByFPS());
+                topTableBody();
+            } else {
+                emptyDriverDialog();
+            }
         } else if (e.getSource() == generateRace) {
             if (races.size() <= 30) {
                 if (driver.size() != 0) {
                     topTableModel.setRowCount(0);
-                    generateRandomRace();
+                    generateRandomRace(0);
                     topTableBody();
                     generatedInfoDialog(0);
                     names.clear();
@@ -262,7 +275,7 @@ public class GUI_APP extends JFrame implements ActionListener {
             if (races.size() <= 30) {
                 if (driver.size() != 0) {
                     bottomTableModel.setRowCount(0);
-                    generateRandomRaceWithPositions();
+                    generateRandomRace(1);
                     bottomTableBody();
                     generatedInfoDialog(1);
                     names.clear();
@@ -281,52 +294,24 @@ public class GUI_APP extends JFrame implements ActionListener {
                 searchTableModel.setRowCount(0);
                 searchTableBody();
                 if (foundDate.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "No exact matches found!", "Not Found!", JOptionPane.INFORMATION_MESSAGE, notFoundIcon);
+                    JOptionPane.showMessageDialog(this, "No exact matches found!", "Not Found!", INFORMATION_MESSAGE, notFoundIcon);
                 }
                 foundDate.clear();
                 foundFinishedPositions.clear();
-                foundStartPositions.clear();
 //                searchText.setText("");
             }
         } else if (e.getSource() == sortRaceButton) {
-            sortTableModel.setRowCount(0);
-            races.sort(new SortByDate());
-            sortTableBody();
+            if (driver.size() != 0) {
+                sortTableModel.setRowCount(0);
+                races.sort(new SortByDate());
+                sortTableBody();
+            } else {
+                emptyDriverDialog();
+            }
         }
     }
 
-    private void generateRandomRace() {
-        Formula1ChampionshipManager f1cm = new Formula1ChampionshipManager();
-        ArrayList<Integer> positionList = new ArrayList<>();
-        boolean validDate;
-        boolean containDate;
-        String dateString;
-        int randomNumber;
-        do {
-            String year = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
-            String month = randomNumberGenerator(12);
-            String day = randomNumberGenerator(31);
-            dateString = year + "/" + month + "/" + day;
-            validDate = f1cm.DateValidator(dateString, Integer.parseInt(year));
-            containDate = races.contains(dateString);
-        } while (containDate && (!validDate));
-        races.add(new RaceData(dateString));
-        for (Formula1Driver formula1Driver : driver) {
-            do {
-                randomNumber = Integer.parseInt(randomNumberGenerator(25));
-            } while (positionList.contains(randomNumber));
-            positionList.add(randomNumber);
-            addPoints(randomNumber, formula1Driver, dateString);
-            names.add(formula1Driver.getDriverName());
-            finishPositions.add(randomNumber);
-            startPositions.add(0);
-            formula1Driver.setRaceCount(1);
-        }
-        dateAsString = dateString;
-        positionList.clear();
-    }
-
-    private void generateRandomRaceWithPositions() {
+    private void generateRandomRace(int type) {
         int max = 99;
         int min = 0;
         int range = max - min + 1;
@@ -363,42 +348,61 @@ public class GUI_APP extends JFrame implements ActionListener {
 
         int num = (int) (Math.random() * range) + min;
         winner = numArray[num];
-        do {
+        int randomNumber;
+        while (true) {
             String year = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
             String month = randomNumberGenerator(12);
             String day = randomNumberGenerator(31);
             dateString = year + "/" + month + "/" + day;
             validDate = f1cm.DateValidator(dateString, Integer.parseInt(year));
-            containDate = races.contains(dateString);
-        } while (containDate && (!validDate));
-        races.add(new RaceData(dateString));
-        for (Formula1Driver formula1Driver : driver) {
-            do {
-                startNumber = Integer.parseInt(randomNumberGenerator(25));
-            } while (startPositionList.contains(startNumber));
-            startPositionList.add(startNumber);
-            names.add(formula1Driver.getDriverName());
-            formula1Driver.setRaceCount(1);
-            startPositions.add(startNumber);
-            for (RaceData race : races) {
-                if (race.getRaceDate().equals(dateString)) {
-                    race.setStartPosition(startNumber);
+            if (validDate) {
+                containDate = races.contains(dateString);
+                if (!containDate) {
+                    break;
                 }
             }
         }
-
-        for (Formula1Driver formula1Driver : driver) {
-            if (startPositionList.contains(winner)) {
-                addPoints(1, formula1Driver, dateString);
-                finishPositionList.add(1);
-                finishPositions.add(1);
-            } else {
+        races.add(new RaceData(dateString));
+        if (type == 0) {
+            for (Formula1Driver formula1Driver : driver) {
                 do {
-                    finishNumber = Integer.parseInt(randomNumberGenerator(25));
-                } while (finishPositionList.contains(finishNumber));
-                finishPositionList.add(finishNumber);
-                addPoints(finishNumber, formula1Driver, dateString);
-                finishPositions.add(finishNumber);
+                    randomNumber = Integer.parseInt(randomNumberGenerator(25));
+                } while (finishPositionList.contains(randomNumber));
+                finishPositionList.add(randomNumber);
+                addPoints(randomNumber, formula1Driver, dateString);
+                names.add(formula1Driver.getDriverName());
+                finishPositions.add(randomNumber);
+                formula1Driver.setRaceCount(1);
+            }
+        } else if (type == 1) {
+            for (Formula1Driver formula1Driver : driver) {
+                do {
+                    startNumber = Integer.parseInt(randomNumberGenerator(25));
+                } while (startPositionList.contains(startNumber));
+                startPositionList.add(startNumber);
+                names.add(formula1Driver.getDriverName());
+                formula1Driver.setRaceCount(1);
+                startPositions.add(startNumber);
+                for (RaceData race : races) {
+                    if (race.getRaceDate().equals(dateString)) {
+                        race.setStartPosition(startNumber);
+                    }
+                }
+            }
+
+            for (Formula1Driver formula1Driver : driver) {
+                if (startPositionList.contains(winner)) {
+                    addPoints(1, formula1Driver, dateString);
+                    finishPositionList.add(1);
+                    finishPositions.add(1);
+                } else {
+                    do {
+                        finishNumber = Integer.parseInt(randomNumberGenerator(25));
+                    } while (finishPositionList.contains(finishNumber));
+                    finishPositionList.add(finishNumber);
+                    addPoints(finishNumber, formula1Driver, dateString);
+                    finishPositions.add(finishNumber);
+                }
             }
         }
         dateAsString = dateString;
@@ -447,7 +451,7 @@ public class GUI_APP extends JFrame implements ActionListener {
             int totalRaceCount = formula1Driver.getRaceCount();
             String sP = "";
             String fP = "";
-            for (RaceData race : races) {
+            for (RaceData ignored : races) {
                 if (names.contains(formula1Driver.getDriverName())) {
                     int index = names.indexOf(formula1Driver.getDriverName());
                     sP = String.valueOf(startPositions.get(index));
@@ -502,7 +506,7 @@ public class GUI_APP extends JFrame implements ActionListener {
     }
 
     private void emptyDriverDialog() {
-        JOptionPane.showMessageDialog(this, "Driver List is Empty!\nTry To add Driver's using Console Menu.", "Driver's Not Found!", JOptionPane.INFORMATION_MESSAGE, emptyIcon);
+        JOptionPane.showMessageDialog(this, "Driver List is Empty!\nTry To add Driver's using Console Menu.", "Driver's Not Found!", INFORMATION_MESSAGE, emptyIcon);
     }
 
     private void generatedInfoDialog(int type) {
@@ -510,7 +514,6 @@ public class GUI_APP extends JFrame implements ActionListener {
         StringBuilder messageMid = new StringBuilder();
         if (type == 0) {
             for (int i = 0; i < names.size(); i++) {
-//            messageMid.append(names.get(i)).append("-").append(positions.get(i)).append("\n");
                 messageMid.append(String.format("%-20s - %4d %n", names.get(i), finishPositions.get(i)));
             }
         } else {
@@ -524,6 +527,6 @@ public class GUI_APP extends JFrame implements ActionListener {
             }
         }
         String fullMessage = messageTop + messageMid;
-        JOptionPane.showMessageDialog(this, fullMessage, "Generated Race Info", JOptionPane.INFORMATION_MESSAGE, infoIcon);
+        JOptionPane.showMessageDialog(this, fullMessage, "Generated Race Info", INFORMATION_MESSAGE, infoIcon);
     }
 }
