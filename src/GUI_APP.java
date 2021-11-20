@@ -458,10 +458,20 @@ public class GUI_APP extends JFrame implements ActionListener {
         return randomNumber;
     }
 
+    /**
+     * This Method Adds Points To the Driver
+     *
+     * @param position - Driver Finish Position as an Integer
+     * @param formula1Driver - Formula1Driver Object
+     * @param dateString - Race Date as String
+     */
     private void addPoints(int position, Formula1Driver formula1Driver, String dateString) {
         Formula1ChampionshipManager.AddDriverPoints(formula1Driver, dateString, position, races);
     }
 
+    /**
+     * This Method Render Top Driver Table
+     */
     private void topTableBody() {
         for (Formula1Driver formula1Driver : driver) {
             int position = driver.indexOf(formula1Driver) + 1;
