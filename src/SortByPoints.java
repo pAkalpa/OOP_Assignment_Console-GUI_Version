@@ -10,6 +10,9 @@ public class SortByPoints implements Comparator<Formula1Driver> {
      */
     @Override
     public int compare(Formula1Driver o1, Formula1Driver o2) {
+        if (o2.getCurrentPoints() == o1.getCurrentPoints()) {
+            return o2.getFirstPositionCount() - o1.getFirstPositionCount();
+        }
         return Float.compare(o2.getCurrentPoints(), o1.getCurrentPoints());
     }
 }

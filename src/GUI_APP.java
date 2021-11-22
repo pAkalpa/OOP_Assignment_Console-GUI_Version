@@ -4,6 +4,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -81,6 +83,29 @@ public class GUI_APP extends JFrame implements ActionListener {
         searchButton.setIcon(searchIcon);
         sortRaceButton.addActionListener(this);
         sortRaceButton.setIcon(ascendingImg);
+        searchText.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    if (races.size() > 0) {
+                        String keyword = searchText.getText();
+                        if (keyword.length() != 0) {
+                            searchArrayLists(keyword);
+                            searchTableModel.setRowCount(0);
+                            searchTableBody();
+                            if (foundDate.isEmpty()) {
+                                JOptionPane.showMessageDialog(tabbedPane, "No exact matches found!", "Not Found!", INFORMATION_MESSAGE, notFoundIcon);
+                            }
+                            foundDate.clear();
+                            foundFinishedPositions.clear();
+//                searchText.setText("");
+                        }
+                    } else {
+                        emptyRacesDialog();
+                    }
+                }
+            }
+        });
 
         setTitle("F1 Championship Manager");
         setSize(1000, 600);
@@ -224,6 +249,13 @@ public class GUI_APP extends JFrame implements ActionListener {
         DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
         cellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
+        driverTableTop.getColumnModel().getColumn(0).setPreferredWidth(10);
+        driverTableTop.getColumnModel().getColumn(1).setPreferredWidth(100);
+        driverTableTop.getColumnModel().getColumn(2).setPreferredWidth(30);
+        driverTableTop.getColumnModel().getColumn(3).setPreferredWidth(100);
+        driverTableTop.getColumnModel().getColumn(9).setPreferredWidth(30);
+
+
         topTableBody();
 
         driverTableTop.setPreferredScrollableViewportSize(new Dimension(950, 100));
@@ -247,6 +279,12 @@ public class GUI_APP extends JFrame implements ActionListener {
         JTable driverTableBottom = new JTable(bottomTableModel);
         DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
         cellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+        driverTableBottom.getColumnModel().getColumn(0).setPreferredWidth(10);
+        driverTableBottom.getColumnModel().getColumn(1).setPreferredWidth(100);
+        driverTableBottom.getColumnModel().getColumn(2).setPreferredWidth(30);
+        driverTableBottom.getColumnModel().getColumn(3).setPreferredWidth(100);
+        driverTableBottom.getColumnModel().getColumn(10).setPreferredWidth(30);
 
         bottomTableBody();
 
