@@ -103,7 +103,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
     @Override
     public void CreateNewDriver() {
         String driverName, teamName, driverLocation, option; // Declare String Variables to store user inputs
-        int firstPositionCount, secondPositionCount, thirdPositionCount, raceCount; // Declare Integer Variables to store user inputs
+        int grandPrixEntered, firstPositionCount, secondPositionCount, thirdPositionCount, raceCount; // Declare Integer Variables to store user inputs
         float currentPoints; // Declare Float Variable to store Points
         boolean flag; // Declare boolean Variable for validation
 
@@ -117,6 +117,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
             driverName = DriverNameValidator(); // Invoke DriverNameValidator for take driver name from user and validate it
             driverLocation = DriverLocationValidator(); // Invoke DriverLocationValidator for take driver Location and validate it
             teamName = CarConstructorValidator(); // Invoke CarConstructorValidator for take Team Name and validate it
+            grandPrixEntered = GrandPrixCountValidator(); // Invoke GrandPrixCountValidator for take entered grand prix count and validate it
             firstPositionCount = PositionCountValidator(1); // Invoke PositionCountValidator for take First Position Count and validate it
             secondPositionCount = PositionCountValidator(2); // Invoke PositionCountValidator for take Second Position Count and validate it
             thirdPositionCount = PositionCountValidator(3);// Invoke PositionCountValidator for take Third Position Count and validate it
@@ -125,7 +126,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
             int oldRacePoint = (firstPositionCount * 25) + (secondPositionCount * 18) + (thirdPositionCount * 15); // Minimum points can have for Driver
             currentPoints = DriverPointsValidator(oldRacePoint); // Invoke DriverPointsValidator for take Points and validate it;
 
-            driver.add(new Formula1Driver(driverName, driverLocation, teamName, firstPositionCount, secondPositionCount, thirdPositionCount, raceCount, currentPoints)); // save Formula1Driver object in driver Arraylist
+            driver.add(new Formula1Driver(driverName, driverLocation, teamName, grandPrixEntered, firstPositionCount, secondPositionCount, thirdPositionCount, raceCount, currentPoints)); // save Formula1Driver object in driver Arraylist
 
             do { // Validate for exit function
                 String inputRegexPattern = "[YN]+";
@@ -554,6 +555,31 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
     }
 
     /**
+     * This Method take No of GrandPrix Driver Entered and validate it
+     *
+     * @return - validated No of Grand Pirx's
+     */
+    private int GrandPrixCountValidator() {
+        int grandPrixEntered;
+        String promptMessage = "Enter No of Grand Prix Driver Entered: ";
+        String errorMessage = "Invalid Input! Try Again.";
+        do {
+            System.out.print(promptMessage);
+            while (!scanner.hasNextInt()) {
+                System.out.print(errorMessage + "\n" + promptMessage);
+                scanner.next();
+            }
+            grandPrixEntered = scanner.nextInt();
+            if (grandPrixEntered < 0) {
+                System.out.print(errorMessage);
+            }
+        } while (grandPrixEntered < 0);
+        return grandPrixEntered;
+    }
+
+    /**
+     * This Method Take No of First, Second or Third Positions Driver had and validates it.
+     *
      * @param position - This says which position need to take user input
      * @return - Position of Races driver previous participated
      */

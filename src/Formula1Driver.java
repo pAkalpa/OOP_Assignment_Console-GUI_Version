@@ -1,6 +1,7 @@
 import java.io.Serializable;
 
 public class Formula1Driver extends Driver implements Serializable, Comparable<Formula1Driver> {
+    int grandPrixEntered; // No of Grand Prix Entered Storing Field
     int firstPositionCount; // First Position Count Storing Field
     int secondPositionCount; // Second Position Count Storing Field
     int thirdPositionCount; // Third Position Count Storing Field
@@ -13,16 +14,18 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
      * @param driverName          - Driver Name String
      * @param driverLocation      - Driver Location String
      * @param teamName            - Team Name String
+     * @param grandPrixEntered    - No of Grand Prix Entered
      * @param firstPositionCount  - First Position Count integer
      * @param secondPositionCount - Second Position Count integer
      * @param thirdPositionCount  - Third Position Count integer
      * @param raceCount           - Race count integer
      * @param currentPoints       - Driver's Current Points float
      */
-    public Formula1Driver(String driverName, String driverLocation, String teamName, int firstPositionCount, int secondPositionCount, int thirdPositionCount, int raceCount, float currentPoints) {
+    public Formula1Driver(String driverName, String driverLocation, String teamName, int grandPrixEntered, int firstPositionCount, int secondPositionCount, int thirdPositionCount, int raceCount, float currentPoints) {
         this.driverName = driverName;
         this.driverLocation = driverLocation;
         this.teamName = teamName;
+        this.grandPrixEntered = grandPrixEntered;
         this.firstPositionCount = firstPositionCount;
         this.secondPositionCount = secondPositionCount;
         this.thirdPositionCount = thirdPositionCount;
@@ -72,6 +75,14 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
      */
     public int getRaceCount() {
         return raceCount;
+    }
+
+    /**
+     * This Method Return Driver's No of Grand Prix Entered
+     * @return - Grand Prix Count
+     */
+    public int getGrandPrixEntered() {
+        return grandPrixEntered;
     }
 
     /**
@@ -143,6 +154,7 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
         String tableDName = "║ Name         ║ %-18s ║%n";
         String tableNationality = "║ Nationality  ║ %-18s ║%n";
         String tableTName = "║ Team Name    ║ %-18s ║%n";
+        String tableGPC = "║ GPC          ║ %-18d ║%n";
         String tableFPC = "║ FPC          ║ %-18d ║%n";
         String tableSPC = "║ SPC          ║ %-18d ║%n";
         String tableTPC = "║ TPC          ║ %-18d ║%n";
@@ -152,6 +164,7 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
 
         System.out.format("╔═══════════════════════════════════╗%n")
                 .format("║           Driver Details          ║%n")
+                .format("║(GPC = Grand Prix Count)           ║%n")
                 .format("║(FPC = First Position Count)       ║%n")
                 .format("║(SPC = Second Position Count)      ║%n")
                 .format("║(TPC = Third Position Count)       ║%n")
@@ -161,6 +174,7 @@ public class Formula1Driver extends Driver implements Serializable, Comparable<F
                 .format(tableDName, driverName)
                 .format(tableNationality, driverLocation)
                 .format(tableTName, teamName)
+                .format(tableGPC, grandPrixEntered)
                 .format(tableFPC, firstPositionCount)
                 .format(tableSPC, secondPositionCount)
                 .format(tableTPC, thirdPositionCount)

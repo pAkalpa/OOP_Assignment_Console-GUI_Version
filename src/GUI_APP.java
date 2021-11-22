@@ -217,7 +217,7 @@ public class GUI_APP extends JFrame implements ActionListener {
      * @return - Top Driver Table
      */
     private JScrollPane topDriverTableRenderer() {
-        String[] header = {"Pos", "Driver Name", "Nationality", "Team/Constructor", "First Pos Count", "Second Pos Count", "Third Pos Count", "Total Races", "Pts"};
+        String[] header = {"Pos", "Driver Name", "Nationality", "Team/Constructor", "Grand Prix Entered","First Pos Count", "Second Pos Count", "Third Pos Count", "Total Races", "Pts"};
 
         topTableModel = new DefaultTableModel(header, 0);
         JTable driverTableTop = new JTable(topTableModel);
@@ -478,13 +478,14 @@ public class GUI_APP extends JFrame implements ActionListener {
             String driverName = formula1Driver.getDriverName();
             String driverLocation = formula1Driver.getDriverLocation();
             String teamName = formula1Driver.getTeamName();
+            int gpc = formula1Driver.getGrandPrixEntered();
             int fps = formula1Driver.getFirstPositionCount();
             int spc = formula1Driver.getSecondPositionCount();
             int tpc = formula1Driver.getThirdPositionCount();
             int totalRaceCount = formula1Driver.getRaceCount();
             float pts = formula1Driver.getCurrentPoints();
 
-            Object[] tableData = {position, driverName, driverLocation, teamName, fps, spc, tpc, totalRaceCount, pts};
+            Object[] tableData = {position, driverName, driverLocation, teamName, gpc, fps, spc, tpc, totalRaceCount, pts};
             topTableModel.addRow(tableData);
         }
     }
