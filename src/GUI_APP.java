@@ -217,7 +217,7 @@ public class GUI_APP extends JFrame implements ActionListener {
      * @return - Top Driver Table
      */
     private JScrollPane topDriverTableRenderer() {
-        String[] header = {"Pos", "Driver Name", "Nationality", "Team/Constructor", "Grand Prix Entered","First Pos Count", "Second Pos Count", "Third Pos Count", "Total Races", "Pts"};
+        String[] header = {"Pos", "Driver Name", "Nationality", "Team/Constructor", "Grand Prix Entered", "First Pos Count", "Second Pos Count", "Third Pos Count", "Total Races", "Pts"};
 
         topTableModel = new DefaultTableModel(header, 0);
         JTable driverTableTop = new JTable(topTableModel);
@@ -322,25 +322,33 @@ public class GUI_APP extends JFrame implements ActionListener {
                 maxRacesDialog();
             }
         } else if (e.getSource() == searchButton) {
-            String keyword = searchText.getText();
-            if (keyword.length() != 0) {
-                searchArrayLists(keyword);
-                searchTableModel.setRowCount(0);
-                searchTableBody();
-                if (foundDate.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "No exact matches found!", "Not Found!", INFORMATION_MESSAGE, notFoundIcon);
-                }
-                foundDate.clear();
-                foundFinishedPositions.clear();
+            if (races.size() > 0) {
+                String keyword = searchText.getText();
+                if (keyword.length() != 0) {
+                    searchArrayLists(keyword);
+                    searchTableModel.setRowCount(0);
+                    searchTableBody();
+                    if (foundDate.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "No exact matches found!", "Not Found!", INFORMATION_MESSAGE, notFoundIcon);
+                    }
+                    foundDate.clear();
+                    foundFinishedPositions.clear();
 //                searchText.setText("");
+                }
+            } else {
+                emptyRacesDialog();
             }
         } else if (e.getSource() == sortRaceButton) {
-            if (driver.size() != 0) {
-                sortTableModel.setRowCount(0);
-                races.sort(new SortByDate());
-                sortTableBody();
+            if (races.size() > 0) {
+                if (driver.size() != 0) {
+                    sortTableModel.setRowCount(0);
+                    races.sort(new SortByDate());
+                    sortTableBody();
+                } else {
+                    emptyDriverDialog();
+                }
             } else {
-                emptyDriverDialog();
+                emptyRacesDialog();
             }
         }
     }
@@ -461,9 +469,9 @@ public class GUI_APP extends JFrame implements ActionListener {
     /**
      * This Method Adds Points To the Driver
      *
-     * @param position - Driver Finish Position as an Integer
+     * @param position       - Driver Finish Position as an Integer
      * @param formula1Driver - Formula1Driver Object
-     * @param dateString - Race Date as String
+     * @param dateString     - Race Date as String
      */
     private void addPoints(int position, Formula1Driver formula1Driver, String dateString) {
         Formula1ChampionshipManager.AddDriverPoints(formula1Driver, dateString, position, races);
@@ -578,6 +586,13 @@ public class GUI_APP extends JFrame implements ActionListener {
      */
     private void emptyDriverDialog() {
         JOptionPane.showMessageDialog(this, "Driver List is Empty!\nTry To add Driver's using Console Menu.", "Driver's Not Found!", INFORMATION_MESSAGE, emptyIcon);
+    }
+
+    /**
+     * This Method Display Dialog Pane If races list size == 0
+     */
+    private void emptyRacesDialog() {
+        JOptionPane.showMessageDialog(this, "Race list is Empty!\nTry To Add Races using Console Menu or Generate Races Using GUI.", "Races Not Found!", INFORMATION_MESSAGE, emptyIcon);
     }
 
     /**
