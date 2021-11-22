@@ -5,6 +5,7 @@ public class RaceData implements Serializable {
     private final String raceDate; // Race Date Storing Field
     private final ArrayList<String> driverNames = new ArrayList<>(); // Driver Name Storing ArrayList
     private final ArrayList<Integer> driverFinishPositions = new ArrayList<>(); // Driver Finish Positions Storing ArrayList
+    private final ArrayList<Integer> driverStartPositions = new ArrayList<>(); // Driver Start Positions Storing ArrayList
 
     /**
      * This Is RaceData Class Main Constructor
@@ -24,6 +25,15 @@ public class RaceData implements Serializable {
     public void setDriverNameAndPosition(String driverName, int position) {
         driverNames.add(driverName);
         driverFinishPositions.add(position);
+    }
+
+    /**
+     * This Method Set Driver Start Position
+     *
+     * @param position - Driver Start position as an integer
+     */
+    public void setDriverStartPositions(int position) {
+        driverStartPositions.add(position);
     }
 
     /**
@@ -51,6 +61,15 @@ public class RaceData implements Serializable {
      */
     public ArrayList<Integer> getDriverFinishPositions() {
         return driverFinishPositions;
+    }
+
+    /**
+     * This Method Returns Driver Start Position ArrayList
+     *
+     * @return - Driver Start Position ArrayList
+     */
+    public ArrayList<Integer> getDriverStartPositions() {
+        return driverStartPositions;
     }
 
     /**
