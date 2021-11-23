@@ -433,7 +433,6 @@ public class GUI_APP extends JFrame implements ActionListener {
 
         int num = (int) (Math.random() * range) + min;
         winner = numArray[num];
-        int randomNumber;
         while (true) {
             String year = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
             String month = randomNumberGenerator(12);
@@ -448,46 +447,59 @@ public class GUI_APP extends JFrame implements ActionListener {
             }
         }
         races.add(new RaceData(dateString));
+
         if (type == 0) {
+
             for (Formula1Driver formula1Driver : driver) {
                 do {
-                    randomNumber = Integer.parseInt(randomNumberGenerator(25));
-                } while (finishPositionList.contains(randomNumber));
-                finishPositionList.add(randomNumber);
-                addPoints(randomNumber, formula1Driver, dateString);
+                    finishNumber = Integer.parseInt(randomNumberGenerator(25));
+                } while (finishPositionList.contains(finishNumber));
+                finishPositionList.add(finishNumber);
+                finishPositions.add(finishNumber);
                 names.add(formula1Driver.getDriverName());
-                finishPositions.add(randomNumber);
-                formula1Driver.setRaceCount(1);
+                for (RaceData race : races) {
+                    if (race.getRaceDate().equals(dateString)) {
+                        race.setDriverStartPositions(0);
+                    }
+                }
+                addPoints(finishNumber, formula1Driver, dateString);
             }
         } else if (type == 1) {
+
             for (Formula1Driver formula1Driver : driver) {
                 do {
                     startNumber = Integer.parseInt(randomNumberGenerator(25));
                 } while (startPositionList.contains(startNumber));
                 startPositionList.add(startNumber);
-                names.add(formula1Driver.getDriverName());
-                formula1Driver.setRaceCount(1);
                 startPositions.add(startNumber);
+                names.add(formula1Driver.getDriverName());
+                for (RaceData race : races) {
+                    if (race.getRaceDate().equals(dateString)) {
+                        race.setDriverStartPositions(startNumber);
+                    }
+                }
             }
 
-            for (Formula1Driver formula1Driver : driver) {
-                if (startPositionList.contains(winner)) {
-                    addPoints(1, formula1Driver, dateString);
+            for (int i = 0; i < driver.size(); i++) {
+                if (startPositionList.get(i).equals(winner)) {
                     finishPositionList.add(1);
                     finishPositions.add(1);
+                    addPoints(1, driver.get(i), dateString);
                 } else {
                     do {
                         finishNumber = Integer.parseInt(randomNumberGenerator(25));
                     } while (finishPositionList.contains(finishNumber));
                     finishPositionList.add(finishNumber);
-                    addPoints(finishNumber, formula1Driver, dateString);
                     finishPositions.add(finishNumber);
+                    addPoints(finishNumber, driver.get(i), dateString);
                 }
             }
+
         }
-        dateAsString = dateString;
-        startPositionList.clear();
         finishPositionList.clear();
+        startPositionList.clear();
+        dateAsString = dateString;
+
     }
 
     /**
