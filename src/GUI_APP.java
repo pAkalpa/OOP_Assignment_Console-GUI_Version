@@ -25,8 +25,8 @@ public class GUI_APP extends JFrame implements ActionListener {
 
     /*--------------------- UI Components ---------------------*/
     private final JToolBar toolBar = new JToolBar();
-    private final JButton sortPointDes = new JButton("Sort by Point (Descending)");
-    private final JButton sortPointAsc = new JButton("Sort by Point (Ascending)");
+    private final JButton sortPointDes = new JButton("Sort by Points (Descending)");
+    private final JButton sortPointAsc = new JButton("Sort by Points (Ascending)");
     private final JButton sortFirstDes = new JButton("Sort by First Positions (Descending)");
     private final JButton generateRace = new JButton("Generate Race Randomly");
     private final JButton generateRaceWithPos = new JButton("Generate Race Randomly(With Positions)");
