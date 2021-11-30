@@ -79,6 +79,7 @@ public class GUI_APP extends JFrame implements ActionListener {
         generateRace.addActionListener(this);
         generateRace.setIcon(randomIcon);
         generateRaceWithPos.addActionListener(this);
+        generateRaceWithPos.setIcon(randomIcon);
         searchButton.addActionListener(this);
         searchButton.setIcon(searchIcon);
         sortRaceButton.addActionListener(this);
