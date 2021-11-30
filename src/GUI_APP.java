@@ -480,6 +480,8 @@ public class GUI_APP extends JFrame implements ActionListener {
                 }
             }
 
+            boolean isOneContains = startPositionList.contains(winner);
+
             for (int i = 0; i < driver.size(); i++) {
                 if (startPositionList.get(i).equals(winner)) {
                     finishPositionList.add(1);
@@ -488,6 +490,11 @@ public class GUI_APP extends JFrame implements ActionListener {
                 } else {
                     do {
                         finishNumber = Integer.parseInt(randomNumberGenerator(25));
+                        if (finishNumber == 1 && isOneContains) {
+                            do {
+                                finishNumber = Integer.parseInt(randomNumberGenerator(25));
+                            } while (finishNumber == 1);
+                        }
                     } while (finishPositionList.contains(finishNumber));
                     finishPositionList.add(finishNumber);
                     finishPositions.add(finishNumber);
