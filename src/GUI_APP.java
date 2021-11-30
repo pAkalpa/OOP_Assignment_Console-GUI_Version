@@ -404,7 +404,6 @@ public class GUI_APP extends JFrame implements ActionListener {
         int finishNumber;
         int[] numArray = new int[100];
         boolean validDate;
-        boolean containDate;
         String dateString;
         Formula1ChampionshipManager f1cm = new Formula1ChampionshipManager();
         ArrayList<Integer> startPositionList = new ArrayList<>();
@@ -433,19 +432,13 @@ public class GUI_APP extends JFrame implements ActionListener {
 
         int num = (int) (Math.random() * range) + min;
         winner = numArray[num];
-        while (true) {
+        do {
             String year = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
             String month = randomNumberGenerator(12);
             String day = randomNumberGenerator(31);
             dateString = year + "/" + month + "/" + day;
             validDate = f1cm.DateValidator(dateString, Integer.parseInt(year));
-            if (validDate) {
-                containDate = races.contains(dateString);
-                if (!containDate) {
-                    break;
-                }
-            }
-        }
+        } while ((!validDate) && (races.contains(dateString)));
         races.add(new RaceData(dateString));
 
         if (type == 0) {
