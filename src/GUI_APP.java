@@ -446,7 +446,7 @@ public class GUI_APP extends JFrame implements ActionListener {
 
             for (Formula1Driver formula1Driver : driver) {
                 do {
-                    finishNumber = Integer.parseInt(randomNumberGenerator(25));
+                    finishNumber = Integer.parseInt(randomNumberGenerator(driver.size()));
                 } while (finishPositionList.contains(finishNumber));
                 finishPositionList.add(finishNumber);
                 finishPositions.add(finishNumber);
@@ -462,7 +462,7 @@ public class GUI_APP extends JFrame implements ActionListener {
 
             for (Formula1Driver formula1Driver : driver) {
                 do {
-                    startNumber = Integer.parseInt(randomNumberGenerator(25));
+                    startNumber = Integer.parseInt(randomNumberGenerator(driver.size()));
                 } while (startPositionList.contains(startNumber));
                 startPositionList.add(startNumber);
                 startPositions.add(startNumber);
@@ -483,10 +483,10 @@ public class GUI_APP extends JFrame implements ActionListener {
                     addPoints(1, driver.get(i), dateString);
                 } else {
                     do {
-                        finishNumber = Integer.parseInt(randomNumberGenerator(25));
+                        finishNumber = Integer.parseInt(randomNumberGenerator(driver.size()));
                         if (finishNumber == 1 && isOneContains) {
                             do {
-                                finishNumber = Integer.parseInt(randomNumberGenerator(25));
+                                finishNumber = Integer.parseInt(randomNumberGenerator(driver.size()));
                             } while (finishNumber == 1);
                         }
                     } while (finishPositionList.contains(finishNumber));
