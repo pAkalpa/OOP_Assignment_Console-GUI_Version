@@ -557,7 +557,7 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
     /**
      * This Method take No of GrandPrix Driver Entered and validate it
      *
-     * @return - validated No of Grand Pirx's
+     * @return - validated No of Grand Prix's
      */
     private int GrandPrixCountValidator() {
         int grandPrixEntered;
