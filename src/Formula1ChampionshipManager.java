@@ -10,10 +10,10 @@ import java.util.*;
 public class Formula1ChampionshipManager implements ChampionshipManager {
     private static boolean isValid = true; // loop control variable of mainMenu method
     private static final Scanner scanner = new Scanner(System.in); // Create scanner object from Scanner Class
-    private static ArrayList<Formula1Driver> driver = new ArrayList<>(); // Empty ArrayList declared for store Formula1Driver class
+    public static ArrayList<Formula1Driver> driver = new ArrayList<>(); // Empty ArrayList declared for store Formula1Driver class
     private static List<String> teamNameList = new ArrayList<>(); // Empty ArrayList declared for store F1 Team Names
     private final ArrayList<Integer> positionList = new ArrayList<>(); // Empty ArrayList declared for store Race positions assigned to drivers
-    private static ArrayList<RaceData> races = new ArrayList<>(); // Empty Arraylist declared for store RaceData Class
+    public static ArrayList<RaceData> races = new ArrayList<>(); // Empty Arraylist declared for store RaceData Class
 
     /**
      * Main Method Invoke four methods and Create Object
@@ -391,6 +391,8 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
             saveFile.writeObject(driver);
             saveFile.writeObject(races);
 
+            saveDataFile.close();
+            saveFile.close();
 //            System.out.println("File Saved Successfully!");
 
         } catch (IOException e) {
@@ -427,6 +429,9 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
                 driver = CastArrayList(list2);
                 Object list3 = savedFile.readObject();
                 races = CastRaceDataArrayList(list3);
+
+                savedDataFile.close();
+                savedFile.close();
             }
         } catch (Exception e) {
             System.out.println("Oops! Something went Wrong while loading Save File.");
@@ -830,6 +835,6 @@ public class Formula1ChampionshipManager implements ChampionshipManager {
      * This Method Run GUI Part of the Programme
      */
     private void RunGUI() {
-        SwingUtilities.invokeLater(() -> new GUI_APP(driver, races));
+        SwingUtilities.invokeLater(GUI_APP::new);
     }
 }

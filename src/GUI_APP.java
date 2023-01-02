@@ -15,8 +15,6 @@ import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
 public class GUI_APP extends JFrame implements ActionListener {
     private static String dateAsString; // date String
     private static int winner; // Winner Start Position
-    private final ArrayList<Formula1Driver> driver;
-    private final ArrayList<RaceData> races;
     private static final ArrayList<String> names = new ArrayList<>();
     private static final ArrayList<Integer> finishPositions = new ArrayList<>();
     private static final ArrayList<Integer> startPositions = new ArrayList<>();
@@ -56,13 +54,8 @@ public class GUI_APP extends JFrame implements ActionListener {
 
     /**
      * Main Constructor Of the GUI
-     *
-     * @param driver - driver ArrayList
-     * @param races  - races ArrayList
      */
-    public GUI_APP(ArrayList<Formula1Driver> driver, ArrayList<RaceData> races) {
-        this.driver = driver;
-        this.races = races;
+    public GUI_APP() {
 
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
         tabbedPane.addTab("Driver Table", driverIcon, driverTablePane());
@@ -88,7 +81,7 @@ public class GUI_APP extends JFrame implements ActionListener {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    if (races.size() > 0) {
+                    if (Formula1ChampionshipManager.races.size() > 0) {
                         String keyword = searchText.getText();
                         if (keyword.length() != 0) {
                             searchArrayLists(keyword);
@@ -306,32 +299,32 @@ public class GUI_APP extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == sortPointDes) {
-            if (driver.size() != 0) {
+            if (Formula1ChampionshipManager.driver.size() != 0) {
                 topTableModel.setRowCount(0);
-                driver.sort(new SortByPoints());
+                Formula1ChampionshipManager.driver.sort(new SortByPoints());
                 topTableBody();
             } else {
                 emptyDriverDialog();
             }
         } else if (e.getSource() == sortPointAsc) {
-            if (driver.size() != 0) {
+            if (Formula1ChampionshipManager.driver.size() != 0) {
                 topTableModel.setRowCount(0);
-                driver.sort(new SortByPoints().reversed());
+                Formula1ChampionshipManager.driver.sort(new SortByPoints().reversed());
                 topTableBody();
             } else {
                 emptyDriverDialog();
             }
         } else if (e.getSource() == sortFirstDes) {
-            if (driver.size() != 0) {
+            if (Formula1ChampionshipManager.driver.size() != 0) {
                 topTableModel.setRowCount(0);
-                driver.sort(new SortByFPS());
+                Formula1ChampionshipManager.driver.sort(new SortByFPS());
                 topTableBody();
             } else {
                 emptyDriverDialog();
             }
         } else if (e.getSource() == generateRace) {
-            if (races.size() <= 30) {
-                if (driver.size() != 0) {
+            if (Formula1ChampionshipManager.races.size() <= 30) {
+                if (Formula1ChampionshipManager.driver.size() != 0) {
                     topTableModel.setRowCount(0);
                     generateRandomRace(0);
                     topTableBody();
@@ -345,8 +338,8 @@ public class GUI_APP extends JFrame implements ActionListener {
                 maxRacesDialog();
             }
         } else if (e.getSource() == generateRaceWithPos) {
-            if (races.size() <= 30) {
-                if (driver.size() != 0) {
+            if (Formula1ChampionshipManager.races.size() <= 30) {
+                if (Formula1ChampionshipManager.driver.size() != 0) {
                     bottomTableModel.setRowCount(0);
                     generateRandomRace(1);
                     bottomTableBody();
@@ -361,7 +354,7 @@ public class GUI_APP extends JFrame implements ActionListener {
                 maxRacesDialog();
             }
         } else if (e.getSource() == searchButton) {
-            if (races.size() > 0) {
+            if (Formula1ChampionshipManager.races.size() > 0) {
                 String keyword = searchText.getText();
                 if (keyword.length() != 0) {
                     searchArrayLists(keyword);
@@ -378,10 +371,10 @@ public class GUI_APP extends JFrame implements ActionListener {
                 emptyRacesDialog();
             }
         } else if (e.getSource() == sortRaceButton) {
-            if (races.size() > 0) {
-                if (driver.size() != 0) {
+            if (Formula1ChampionshipManager.races.size() > 0) {
+                if (Formula1ChampionshipManager.driver.size() != 0) {
                     sortTableModel.setRowCount(0);
-                    races.sort(new SortByDate());
+                    Formula1ChampionshipManager.races.sort(new SortByDate());
                     sortTableBody();
                 } else {
                     emptyDriverDialog();
@@ -439,19 +432,19 @@ public class GUI_APP extends JFrame implements ActionListener {
             String day = randomNumberGenerator(31);
             dateString = year + "/" + month + "/" + day;
             validDate = f1cm.DateValidator(dateString, Integer.parseInt(year));
-        } while ((!validDate) && (races.contains(dateString)));
-        races.add(new RaceData(dateString));
+        } while ((!validDate) && (Formula1ChampionshipManager.races.contains(dateString)));
+        Formula1ChampionshipManager.races.add(new RaceData(dateString));
 
         if (type == 0) {
 
-            for (Formula1Driver formula1Driver : driver) {
+            for (Formula1Driver formula1Driver : Formula1ChampionshipManager.driver) {
                 do {
-                    finishNumber = Integer.parseInt(randomNumberGenerator(driver.size()));
+                    finishNumber = Integer.parseInt(randomNumberGenerator(Formula1ChampionshipManager.driver.size()));
                 } while (finishPositionList.contains(finishNumber));
                 finishPositionList.add(finishNumber);
                 finishPositions.add(finishNumber);
                 names.add(formula1Driver.getDriverName());
-                for (RaceData race : races) {
+                for (RaceData race : Formula1ChampionshipManager.races) {
                     if (race.getRaceDate().equals(dateString)) {
                         race.setDriverStartPositions(0);
                     }
@@ -460,14 +453,14 @@ public class GUI_APP extends JFrame implements ActionListener {
             }
         } else if (type == 1) {
 
-            for (Formula1Driver formula1Driver : driver) {
+            for (Formula1Driver formula1Driver : Formula1ChampionshipManager.driver) {
                 do {
-                    startNumber = Integer.parseInt(randomNumberGenerator(driver.size()));
+                    startNumber = Integer.parseInt(randomNumberGenerator(Formula1ChampionshipManager.driver.size()));
                 } while (startPositionList.contains(startNumber));
                 startPositionList.add(startNumber);
                 startPositions.add(startNumber);
                 names.add(formula1Driver.getDriverName());
-                for (RaceData race : races) {
+                for (RaceData race : Formula1ChampionshipManager.races) {
                     if (race.getRaceDate().equals(dateString)) {
                         race.setDriverStartPositions(startNumber);
                     }
@@ -476,23 +469,23 @@ public class GUI_APP extends JFrame implements ActionListener {
 
             boolean isOneContains = startPositionList.contains(winner);
 
-            for (int i = 0; i < driver.size(); i++) {
+            for (int i = 0; i < Formula1ChampionshipManager.driver.size(); i++) {
                 if (startPositionList.get(i).equals(winner)) {
                     finishPositionList.add(1);
                     finishPositions.add(1);
-                    addPoints(1, driver.get(i), dateString);
+                    addPoints(1, Formula1ChampionshipManager.driver.get(i), dateString);
                 } else {
                     do {
-                        finishNumber = Integer.parseInt(randomNumberGenerator(driver.size()));
+                        finishNumber = Integer.parseInt(randomNumberGenerator(Formula1ChampionshipManager.driver.size()));
                         if (finishNumber == 1 && isOneContains) {
                             do {
-                                finishNumber = Integer.parseInt(randomNumberGenerator(driver.size()));
+                                finishNumber = Integer.parseInt(randomNumberGenerator(Formula1ChampionshipManager.driver.size()));
                             } while (finishNumber == 1);
                         }
                     } while (finishPositionList.contains(finishNumber));
                     finishPositionList.add(finishNumber);
                     finishPositions.add(finishNumber);
-                    addPoints(finishNumber, driver.get(i), dateString);
+                    addPoints(finishNumber, Formula1ChampionshipManager.driver.get(i), dateString);
                 }
             }
 
@@ -525,15 +518,15 @@ public class GUI_APP extends JFrame implements ActionListener {
      * @param dateString     - Race Date as String
      */
     private void addPoints(int position, Formula1Driver formula1Driver, String dateString) {
-        Formula1ChampionshipManager.AddDriverPoints(formula1Driver, dateString, position, races);
+        Formula1ChampionshipManager.AddDriverPoints(formula1Driver, dateString, position, Formula1ChampionshipManager.races);
     }
 
     /**
      * This Method Render Top Driver Table
      */
     private void topTableBody() {
-        for (Formula1Driver formula1Driver : driver) {
-            int position = driver.indexOf(formula1Driver) + 1;
+        for (Formula1Driver formula1Driver : Formula1ChampionshipManager.driver) {
+            int position = Formula1ChampionshipManager.driver.indexOf(formula1Driver) + 1;
             String driverName = formula1Driver.getDriverName();
             String driverLocation = formula1Driver.getDriverLocation();
             String teamName = formula1Driver.getTeamName();
@@ -553,8 +546,8 @@ public class GUI_APP extends JFrame implements ActionListener {
      * This Method Render Bottom Table
      */
     private void bottomTableBody() {
-        for (Formula1Driver formula1Driver : driver) {
-            int position = driver.indexOf(formula1Driver) + 1;
+        for (Formula1Driver formula1Driver : Formula1ChampionshipManager.driver) {
+            int position = Formula1ChampionshipManager.driver.indexOf(formula1Driver) + 1;
             String driverName = formula1Driver.getDriverName();
             String driverLocation = formula1Driver.getDriverLocation();
             String teamName = formula1Driver.getTeamName();
@@ -564,7 +557,7 @@ public class GUI_APP extends JFrame implements ActionListener {
             int totalRaceCount = formula1Driver.getRaceCount();
             String sP = "";
             String fP = "";
-            for (RaceData ignored : races) {
+            for (RaceData ignored : Formula1ChampionshipManager.races) {
                 if (names.contains(formula1Driver.getDriverName())) {
                     int index = names.indexOf(formula1Driver.getDriverName());
                     sP = String.valueOf(startPositions.get(index));
@@ -582,7 +575,7 @@ public class GUI_APP extends JFrame implements ActionListener {
      * This Method Render Sort Tables
      */
     private void sortTableBody() {
-        for (RaceData race : races) {
+        for (RaceData race : Formula1ChampionshipManager.races) {
             String date = race.getRaceDate();
             int participated = race.getDriverNames().size();
             Object[] tableData = {date, participated};
@@ -609,7 +602,7 @@ public class GUI_APP extends JFrame implements ActionListener {
      * @param keyword - Driver Name
      */
     private void searchArrayLists(String keyword) {
-        for (RaceData race : races) {
+        for (RaceData race : Formula1ChampionshipManager.races) {
             ArrayList<String> names = race.getDriverNames();
             for (String name : names) {
                 if (keyword.equalsIgnoreCase(name)) {
@@ -628,7 +621,7 @@ public class GUI_APP extends JFrame implements ActionListener {
         Object[] option = {"Continue", "Delete"};
         int n = JOptionPane.showOptionDialog(this, "Maximum(30) Races added for this Season.  \nPress Delete to Clear Previous Race Date's! or Press Continue for Keep Data.      \n\n", "Maximum Races Added!", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, binIcon, option, option[0]);
         if (n == 1) {
-            races.clear();
+            Formula1ChampionshipManager.races.clear();
         }
     }
 
